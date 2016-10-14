@@ -1,0 +1,10 @@
+module.tx_hubic {
+    settings < plugin.tx_hubic.settings
+    persistence < plugin.tx_hubic.persistence
+    view < plugin.tx_hubic.view
+    view {
+        templateRootPath = EXT:hubic/Resources/Private/Backend/Templates/
+        partialRootPath = EXT:hubic/Resources/Private/Partials/
+        layoutRootPath = EXT:hubic/Resources/Private/Backend/Layouts/
+    }
+}

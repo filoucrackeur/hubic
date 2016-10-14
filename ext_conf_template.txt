@@ -1,0 +1,4 @@
+# cat=Configuration/clientId; type=string; label=Client ID:Just start to register your app in your hubic account manager.; header
+client_id=
+# cat=Configuration/clientSecret; type=string; label=Client Secret:
+client_secret=

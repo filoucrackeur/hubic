@@ -1,0 +1,45 @@
+{
+	"name": "filoucrackeur/hubic",
+	"description": "Cloud system synchronization with hubiC.com",
+	"type": "typo3-cms-extension",
+	"license": "GPL-3.0+",
+	"homepage": "https://github.com/filoucrackeur/hubic",
+	"support": {
+		"issues": "https://github.com/filoucrackeur/hubic/issues"
+	},
+	"keywords": [
+		"hubic",
+		"cloud"
+	],
+	"authors": [
+		{
+			"name": "Philippe Court",
+			"email": "philippe.court@gmail.com",
+			"role": "Developer",
+			"homepage": "https://github.com/filoucrackeur/"
+		}
+	],
+	"require": {
+		"php": ">=5.3,<8.0-DEV",
+		"typo3/cms-backend": "^7.6 || ^8.0",
+		"typo3/cms-core": "^7.6 || ^8.0",
+		"typo3/cms-extbase": "^7.6 || ^8.0",
+		"typo3/cms-extensionmanager": "^7.6 || ^8.0",
+		"typo3/cms-fluid": "^7.6 || ^8.0",
+		"typo3/cms-install": "^7.6 || ^8.0"
+	},
+	"replace": {
+		"hubic": "self.version",
+		"typo3-ter/hubic": "self.version"
+	},
+	"autoload": {
+		"psr-4": {
+			"Filoucrackeur\\Hubic\\": "Classes/"
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.0.x-dev"
+		}
+	}
+}
