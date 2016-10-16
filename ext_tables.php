@@ -3,11 +3,11 @@ if (TYPO3_MODE === 'BE') {
     if (version_compare(TYPO3_version, '7.6.0', '>=')) {
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
             'Filoucrackeur.hubic',
-            'web',          // Main area
+            'tools',          // Main area
             'hubic',         // Name of the module
             '',             // Position of the module
             array(          // Allowed controller action combinations
-                'Backend\Auth' => 'index'
+                'Backend\Account' => 'index,info,config'
             ),
             array(          // Additional configuration
                 'access' => 'user,group',

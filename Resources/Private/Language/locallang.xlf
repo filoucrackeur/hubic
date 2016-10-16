@@ -12,6 +12,12 @@
 			<trans-unit id="mlang_labels_tabdescr">
 				<source>Management synchronization hubiC TYPO3 CMS</source>
 			</trans-unit>
+			<trans-unit id="docheader.account.index">
+				<source>hubiC - OVH</source>
+			</trans-unit>
+			<trans-unit id="docheader.account.config">
+				<source>Configuration</source>
+			</trans-unit>
 			<trans-unit id="docheader.account.info">
 				<source>Informations</source>
 			</trans-unit>

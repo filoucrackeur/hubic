@@ -13,7 +13,9 @@
 				<div class="docheader-row2-left">
 					<f:be.buttons.csh />
 					<f:be.menus.actionMenu>
-						<f:be.menus.actionMenuItem label="{f:translate(key:'docheader.account.info')}" controller="Account" action="info" />
+						<f:be.menus.actionMenuItem label="{f:translate(key:'docheader.account.index')}" controller="Backend\Account" action="index" />
+						<f:be.menus.actionMenuItem label="{f:translate(key:'docheader.account.config')}" controller="Backend\Account" action="config" />
+						<f:be.menus.actionMenuItem label="{f:translate(key:'docheader.account.info')}" controller="Backend\Account" action="info" />
 					</f:be.menus.actionMenu>
 				</div>
 				<div class="docheader-row2-right">

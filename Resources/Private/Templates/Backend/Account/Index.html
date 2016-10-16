@@ -1,0 +1,48 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+		 xmlns:f="http://xsd.helmut-hummel.de/ns/TYPO3/CMS/Fluid/ViewHelpers">
+	<f:layout name="module"/>
+
+
+	<f:section name="iconButtons">
+	</f:section>
+
+	<f:section name="main">
+		<h1>TYPO3 hubiC package install</h1>
+			<f:debug>{_all}</f:debug>
+		<f:comment>
+			<f:be.infobox title="Infobox with default icon" state="-1">Your infobox content</f:be.infobox>
+			<f:be.infobox title="Infobox with default icon" state="0">Your infobox content</f:be.infobox>
+			<f:be.infobox title="Infobox with default icon" state="1">hubic Extension Configuration</f:be.infobox>
+		</f:comment>
+
+
+		<f:if condition="{client.client_id} && {client.client_secret}">
+			<f:then>
+				<f:be.infobox title="hubiC API" state="-1">
+					Your authentication datas <a href="/typo3/index.php?M=tools_ExtensionmanagerExtensionmanager
+&moduleToken=a9e883b91c61fa82be47f97a1c5cf79bbb98301d&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Bextension%5D%5Bkey%5D=hubic&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Baction%5D=showConfigurationForm
+&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Bcontroller%5D=Configuration">Modify</a>
+					<ul>
+						<li><strong>Client ID</strong>: {client.client_id}</li>
+						<li><strong>Client secret</strong>: {client.client_secret}</li>
+					</ul>
+				</f:be.infobox>
+
+				<a href="{authorizationRequestUrl}" class="btn btn-primary">Autorization Request hubiC</a>
+
+					<f:be.infobox title="hubiC API" state="0">
+						<strong>Token</strong>: {client.access_token}
+					</f:be.infobox>
+
+			</f:then>
+			<f:else>
+				<f:be.infobox title="hubiC API" state="2">You must configure your API OAuth2 authentication datas<a
+					href="/typo3/index.php?M=tools_ExtensionmanagerExtensionmanager
+&moduleToken=a9e883b91c61fa82be47f97a1c5cf79bbb98301d&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Bextension%5D%5Bkey%5D=hubic&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Baction%5D=showConfigurationForm
+&tx_extensionmanager_tools_extensionmanagerextensionmanager%5Bcontroller%5D=Configuration">Configure</a></f:be.infobox>
+
+			</f:else>
+		</f:if>
+
+	</f:section>
+</div>
