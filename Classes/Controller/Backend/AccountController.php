@@ -4,8 +4,6 @@ namespace Filoucrackeur\Hubic\Controller\Backend;
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Domain\Repository\AccountRepository;
 use Filoucrackeur\Hubic\Service\ClientUtility;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
@@ -17,7 +15,9 @@ class AccountController extends ActionController
      */
     protected $client;
 
-
+    /**
+     * @var AccountRepository $accountRepository
+     */
     protected $accountRepository;
 
 
@@ -28,6 +28,8 @@ class AccountController extends ActionController
         /* @var AccountRepository $accountRepository */
         $this->accountRepository = $this->objectManager->get('Filoucrackeur\Hubic\Domain\Repository\AccountRepository');
 
+        /* @var ClientUtility $client */
+        $this->client = GeneralUtility::makeInstance(ClientUtility::class);
     }
 
 
@@ -38,24 +40,39 @@ class AccountController extends ActionController
     }
 
     public function showAction(Account $account){
-        /* @var ClientUtility $client */
-        $this->client = GeneralUtility::makeInstance(ClientUtility::class);
 
-        $clientAccount = $this->client->getAccount();
-        $clientAccountQuota = $this->client->getAccountQuota();
-        $agreement = $this->client->getAgreement();
+        if($account->getAccessToken()){
 
-        $this->view->assignMultiple([
-            'account' => $account,
-            'clientAccount' => $clientAccount,
-            'clientAccountQuota' => $clientAccountQuota,
-            'agreement' => $agreement,
-            'authorizationRequestUrl' => $this->client->getAuthorizationRequestUrl()
-        ]);
+            $clientAccount = $this->client->getAccount();
+            $clientAccountQuota = $this->client->getAccountQuota();
+            $agreement = $this->client->getAgreement();
+
+            $this->view->assignMultiple([
+                'account' => $account,
+                'clientAccount' => $clientAccount,
+                'clientAccountQuota' => $clientAccountQuota,
+                'agreement' => $agreement
+            ]);
+        } else {
+            $this->view->assign('account', $account);
+        }
     }
 
     public function authenticationRequestAction(Account $account) {
-        $this->addFlashMessage('Token succesfully added', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
+        $this->redirectToUri($this->client->getAuthorizationRequestUrl($account));
+    }
+
+    public function authenticationResponseAction(Account $account) {
+        DebuggerUtility::var_dump($account);
+        die();
+
+        /* @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager $pm */
+        $pm = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager');
+        $account->setAccessToken();
+        $pm->update($account);
+        $pm->persistAll();
+
+        $this->addFlashMessage('Token successfully added', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
         $this->redirect('show','','',['account' => $account]);
     }
 }

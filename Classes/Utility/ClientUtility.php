@@ -15,6 +15,7 @@
  */
 namespace Filoucrackeur\Hubic\Service;
 
+use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -87,14 +88,8 @@ class ClientUtility implements SingletonInterface
         $extensionConfiguration = $configurationUtility->getCurrentConfiguration('hubic');
         $this->client_id = $extensionConfiguration['client_id']['value'];
         $this->client_secret = $extensionConfiguration['client_secret']['value'];
-        $this->redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic');
         $this->access_token = $extensionConfiguration['access_token']['value'];
         $this->state = md5(time());
-//         echo $this->redirect_uri;
-
-        $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
-        $formToken = $formProtection->generateToken('AuthorizationRequest');
-        $this->redirect_uri .= '&formToken=' . $formToken;
 
         $this->client = new Client($this->client_id, $this->client_secret);
         $this->client->setScope($this->scope);
@@ -132,14 +127,24 @@ class ClientUtility implements SingletonInterface
         return $response;
     }
 
-    public function hasValidToken()
+    public function getAuthorizationRequestUrl(Account $account)
     {
 
-    }
+        $this->redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic',[
+            'tx_hubic_tools_hubichubic' => [
+                'action' => 'authenticationResponse',
+                'controller' => 'Backend\Account',
+                'account' => $account
+            ]
+        ]);
 
-    public function getAuthorizationRequestUrl()
-    {
+
+        $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
+        $formToken = $formProtection->generateToken('AuthorizationRequest');
+        $this->redirect_uri .= '&formToken=' . $formToken;
+
         $authUrl = $this->client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->redirect_uri);
+
         return $authUrl;
     }
 
@@ -162,34 +167,4 @@ class ClientUtility implements SingletonInterface
         return $response;
     }
 
-
-    /*
-    $client = new OAuth2\Client(CLIENT_ID, CLIENT_SECRET);
-    if (!isset($_GET['code']))
-    {
-    $auth_url = $client->getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
-    header('Location: ' . $auth_url);
-    die('Redirect');
-    }
-    else
-        {
-            $base64 = base64_encode(CLIENT_ID.':'.CLIENT_SECRET);
-            //var_dump($_GET['code']);
-            //var_dump($base64);
-            //die();
-            $params = array('code' => $_GET['code'], 'redirect_uri' => REDIRECT_URI);
-            $response = $client->getAccessToken(TOKEN_ENDPOINT, 'authorization_code', $params);
-    //    echo "<pre>";
-    //                     var_dump($response);
-    //    echo "</pre>";
-    //die();
-            //parse_str($response['result'], $info);
-            $client->setAccessTokenType(1);
-            $client->setAccessToken($response['result']['access_token']);
-            $response = $client->fetch('https://api.hubic.com/1.0/account');
-            echo "<pre>";
-            var_dump($response);
-            echo "</pre>";
-        }
-    */
 }
