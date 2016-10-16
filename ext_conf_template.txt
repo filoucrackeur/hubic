@@ -2,3 +2,5 @@
 client_id=
 # cat=Configuration/clientSecret; type=string; label=Client Secret:
 client_secret=
+# cat=Configuration/accessToken; type=string; label=Access Token API;
+access_token=

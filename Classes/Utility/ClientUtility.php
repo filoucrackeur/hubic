@@ -15,10 +15,8 @@
  */
 namespace Filoucrackeur\Hubic\Service;
 
-use Doctrine\Common\Util\Debug;
 use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\FormProtection\FormProtectionFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -48,12 +46,17 @@ class ClientUtility implements SingletonInterface
     /**
      * @var \string
      */
+    public $access_token;
+
+    /**
+     * @var \string
+     */
     protected $redirect_uri;
 
     /**
      * @var string
      */
-    protected $scope = 'usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw';
+    protected $scope = 'usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r';
 
     /**
      * @var string
@@ -82,77 +85,111 @@ class ClientUtility implements SingletonInterface
         /** @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility */
         $configurationUtility = $this->objectManager->get('TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility');
         $extensionConfiguration = $configurationUtility->getCurrentConfiguration('hubic');
-
         $this->client_id = $extensionConfiguration['client_id']['value'];
         $this->client_secret = $extensionConfiguration['client_secret']['value'];
-        $this->redirect_uri = 'http://'.$_SERVER['HTTP_HOST'].BackendUtility::getModuleUrl().'&M=tools_HubicHubic';
-        $this->token = $extensionConfiguration['token']['value'];
+        $this->redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic');
+        $this->access_token = $extensionConfiguration['access_token']['value'];
         $this->state = md5(time());
+//         echo $this->redirect_uri;
 
         $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
-//        DebuggerUtility::var_dump($formProtection,"formProtection");
-        $token = $this->redirect_uri;
+        $formToken = $formProtection->generateToken('AuthorizationRequest');
+        $this->redirect_uri .= '&formToken=' . $formToken;
 
-//        DebuggerUtility::var_dump($token,"token");
-//        DebuggerUtility::var_dump($this->redirect_uri,"RedirectUrl");
         $this->client = new Client($this->client_id, $this->client_secret);
-        if (!isset($_GET['code']))
-        {
-            $this->getAuthorizationRequestUrl();
-        }else{
-            $base64 = base64_encode($this->client_id.':'.$this->client_secret);
-            $params = array('code' => $_GET['code'], 'redirect_uri' => $this->redirect_uri);
-            $response = $this->client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
-//    echo "<pre>";
-//                     var_dump($response);
-//    echo "</pre>";
-//die();
-            $this->client->setAccessTokenType(1);
-            $this->client->setAccessToken($response['result']['access_token']);
-            $response = $this->client->fetch('https://api.hubic.com/1.0/account');
-//            echo "<pre>";
-//            var_dump($response);
-//            echo "</pre>";
+        $this->client->setScope($this->scope);
+        $this->client->setAccessTokenType(1);
+
+        if ($this->access_token) {
+            $this->client->setAccessToken($this->access_token);
+        }else {
+            if (isset($_GET['formToken'])) {
+                $_GET['code'] = str_replace('code=', '', strstr($_GET['formToken'], "code="));
+            }
+            if (!isset($_GET['code'])) {
+                //$this->getAuthorizationRequestUrl();
+            } else {
+                $params = array('code' => $_GET['code'], 'redirect_uri' => $this->redirect_uri);
+                $response = $this->client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
+
+                if ($response['result']['access_token']) {
+                    $configurationUtility->writeConfiguration([
+                        'client_id' => $this->client_id,
+                        'client_secret' => $this->client_secret,
+                        'access_token' => $response['result']['access_token']
+                    ], 'hubic');
+                }
+
+                $this->client->setAccessToken($response['result']['access_token']);
+            }
         }
-//DebuggerUtility::var_dump($this->client);
     }
 
 
+    public function getAccount()
+    {
+        $response = $this->client->fetch('https://api.hubic.com/1.0/account');
+        return $response;
+    }
 
-     public function getAuthorizationRequestUrl() {
-         $authUrl = $this->client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->redirect_uri);
+    public function hasValidToken()
+    {
 
+    }
+
+    public function getAuthorizationRequestUrl()
+    {
+        $authUrl = $this->client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->redirect_uri);
         return $authUrl;
     }
 
-
-/*
-$client = new OAuth2\Client(CLIENT_ID, CLIENT_SECRET);
-if (!isset($_GET['code']))
-{
-$auth_url = $client->getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
-header('Location: ' . $auth_url);
-die('Redirect');
-}
-else
+    /**
+     * Get hubiC account Quota
+     * @return array
+     */
+    public function getAccountQuota()
     {
-        $base64 = base64_encode(CLIENT_ID.':'.CLIENT_SECRET);
-        //var_dump($_GET['code']);
-        //var_dump($base64);
-        //die();
-        $params = array('code' => $_GET['code'], 'redirect_uri' => REDIRECT_URI);
-        $response = $client->getAccessToken(TOKEN_ENDPOINT, 'authorization_code', $params);
-//    echo "<pre>";
-//                     var_dump($response);
-//    echo "</pre>";
-//die();
-        //parse_str($response['result'], $info);
-        $client->setAccessTokenType(1);
-        $client->setAccessToken($response['result']['access_token']);
-        $response = $client->fetch('https://api.hubic.com/1.0/account');
-        echo "<pre>";
-        var_dump($response);
-        echo "</pre>";
+        $response = $this->client->fetch('https://api.hubic.com/1.0/account/usage');
+        return $response;
     }
-*/
+
+    /**
+     * Get hubiC agreements
+     * @return array
+     */
+    public function getAgreement() {
+        $response = $this->client->fetch('https://api.hubic.com/1.0/agreement');
+        return $response;
+    }
+
+
+    /*
+    $client = new OAuth2\Client(CLIENT_ID, CLIENT_SECRET);
+    if (!isset($_GET['code']))
+    {
+    $auth_url = $client->getAuthenticationUrl(AUTHORIZATION_ENDPOINT, REDIRECT_URI);
+    header('Location: ' . $auth_url);
+    die('Redirect');
+    }
+    else
+        {
+            $base64 = base64_encode(CLIENT_ID.':'.CLIENT_SECRET);
+            //var_dump($_GET['code']);
+            //var_dump($base64);
+            //die();
+            $params = array('code' => $_GET['code'], 'redirect_uri' => REDIRECT_URI);
+            $response = $client->getAccessToken(TOKEN_ENDPOINT, 'authorization_code', $params);
+    //    echo "<pre>";
+    //                     var_dump($response);
+    //    echo "</pre>";
+    //die();
+            //parse_str($response['result'], $info);
+            $client->setAccessTokenType(1);
+            $client->setAccessToken($response['result']['access_token']);
+            $response = $client->fetch('https://api.hubic.com/1.0/account');
+            echo "<pre>";
+            var_dump($response);
+            echo "</pre>";
+        }
+    */
 }

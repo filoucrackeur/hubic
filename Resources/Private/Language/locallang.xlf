@@ -13,7 +13,7 @@
 				<source>Management synchronization hubiC TYPO3 CMS</source>
 			</trans-unit>
 			<trans-unit id="docheader.account.index">
-				<source>hubiC - OVH</source>
+				<source>Account manager hubiC</source>
 			</trans-unit>
 			<trans-unit id="docheader.account.config">
 				<source>Configuration</source>

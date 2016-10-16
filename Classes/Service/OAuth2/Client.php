@@ -57,6 +57,13 @@ class Client
     protected $client_secret = null;
 
     /**
+     * Scope
+     *
+     * @var string
+     */
+    protected $scope = null;
+
+    /**
      * Client Authentication method
      *
      * @var int
@@ -168,6 +175,7 @@ class Client
     {
         $parameters = array_merge(array(
             'response_type' => 'code',
+            'scope'         => $this->scope,
             'client_id'     => $this->client_id,
             'redirect_uri'  => $redirect_uri
         ), $extra_parameters);
@@ -480,6 +488,22 @@ class Client
         $parts = explode('_', $grant_type);
         array_walk($parts, function(&$item) { $item = ucfirst($item);});
         return implode('', $parts);
+    }
+
+    /**
+     * @return string
+     */
+    public function getScope(): string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string $scope
+     */
+    public function setScope(string $scope)
+    {
+        $this->scope = $scope;
     }
 }
 
