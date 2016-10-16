@@ -1,3 +1,9 @@
+plugin.tx_hubic {
+    persistence {
+        storagePid =
+    }
+}
+
 module.tx_hubic {
     settings < plugin.tx_hubic.settings
     persistence < plugin.tx_hubic.persistence

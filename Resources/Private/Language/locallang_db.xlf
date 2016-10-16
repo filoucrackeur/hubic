@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2014-06-02T11:48:25Z" product-name="hubic">
+		<header/>
+		<body>
+			<trans-unit id="tx_hubic_domain_model_account">
+				<source>hubiC Account</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

@@ -1,4 +1,5 @@
 <?php
+defined('TYPO3_MODE') or die();
 if (TYPO3_MODE === 'BE') {
     if (version_compare(TYPO3_version, '7.6.0', '>=')) {
         \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
@@ -7,7 +8,7 @@ if (TYPO3_MODE === 'BE') {
             'hubic',         // Name of the module
             '',             // Position of the module
             array(          // Allowed controller action combinations
-                'Backend\Account' => 'index,info,config'
+                'Backend\Account' => 'index,show,new,update,delete,authenticationRequest'
             ),
             array(          // Additional configuration
                 'access' => 'user,group',
@@ -16,4 +17,7 @@ if (TYPO3_MODE === 'BE') {
             )
         );
     }
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_hubic_domain_model_account');
+
 }
