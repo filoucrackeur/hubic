@@ -21,6 +21,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
@@ -35,87 +36,49 @@ class ClientUtility implements SingletonInterface
     const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
 
     /**
-     * @var \string
-     */
-    public $client_id;
-
-    /**
-     * @var \string
-     */
-    public $client_secret;
-
-    /**
-     * @var \string
-     */
-    public $access_token;
-
-    /**
-     * @var \string
-     */
-    protected $redirect_uri;
-
-    /**
-     * @var string
-     */
-    protected $scope = 'usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r';
-
-    /**
-     * @var string
-     */
-    protected $responseType = 'code';
-
-    /**
-     * @var string
-     */
-    protected $state;
-
-    /**
      * @var \Filoucrackeur\Hubic\Service\OAuth2\Client
      */
-    protected $client;
+    protected $OAuth2client;
 
     /**
      * @var  \TYPO3\CMS\Extbase\Object\ObjectManager
      */
     protected $objectManager;
 
-    public function __construct()
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+     */
+    protected $persistenceManager;
+
+    /**
+     * @var \Filoucrackeur\Hubic\Domain\Model\Account
+     */
+    protected $account;
+
+    public function __construct(Account $account)
     {
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(PersistenceManager::class);
 
-        /** @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility */
-        $configurationUtility = $this->objectManager->get('TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility');
-        $extensionConfiguration = $configurationUtility->getCurrentConfiguration('hubic');
-        $this->client_id = $extensionConfiguration['client_id']['value'];
-        $this->client_secret = $extensionConfiguration['client_secret']['value'];
-        $this->access_token = $extensionConfiguration['access_token']['value'];
-        $this->state = md5(time());
-
-        $this->client = new Client($this->client_id, $this->client_secret);
-        $this->client->setScope($this->scope);
-        $this->client->setAccessTokenType(1);
-
-        if ($this->access_token) {
-            $this->client->setAccessToken($this->access_token);
-        }else {
+        $this->OAuth2client = new Client($account->getClientId(), $account->getClientSecret());
+        $this->OAuth2client->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r');
+        $this->OAuth2client->setAccessTokenType(1);
+//        $this->OAuth2client->setResponseType('code');
+//        $this->OAuth2client->setState(md5(time()));
+        if ($account->getAccessToken()) {
+            $this->OAuth2client->setAccessToken($account->getAccessToken());
+        } else {
             if (isset($_GET['formToken'])) {
-                $_GET['code'] = str_replace('code=', '', strstr($_GET['formToken'], "code="));
+                $code = str_replace('code=', '', strstr($_GET['formToken'], "code="));
             }
-            if (!isset($_GET['code'])) {
-                //$this->getAuthorizationRequestUrl();
-            } else {
-                $params = array('code' => $_GET['code'], 'redirect_uri' => $this->redirect_uri);
-                $response = $this->client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
+            if (isset($code)) {
+                $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($account));
+                $response = $this->OAuth2client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
 
-                if ($response['result']['access_token']) {
-                    $configurationUtility->writeConfiguration([
-                        'client_id' => $this->client_id,
-                        'client_secret' => $this->client_secret,
-                        'access_token' => $response['result']['access_token']
-                    ], 'hubic');
-                }
-
-                $this->client->setAccessToken($response['result']['access_token']);
+                $account->setAccessToken($response['result']['access_token']);
+                $this->persistenceManager->update($account);
+                $this->persistenceManager->persistAll();
+//                $this->OAuth2client->setAccessToken($account->getAccessToken());
             }
         }
     }
@@ -123,28 +86,30 @@ class ClientUtility implements SingletonInterface
 
     public function getAccount()
     {
-        $response = $this->client->fetch('https://api.hubic.com/1.0/account');
+        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/account');
         return $response;
+    }
+
+    public function getRedirectUri(Account $account)
+    {
+
+        $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
+        $formToken = $formProtection->generateToken('AuthorizationRequest');
+
+        return 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic', [
+            'tx_hubic_tools_hubichubic' => [
+                'action' => 'authenticationResponse',
+                'controller' => 'Backend\Account',
+                'account' => $account->getUid()
+            ],
+            'formToken' => $formToken
+        ]);
+
     }
 
     public function getAuthorizationRequestUrl(Account $account)
     {
-
-        $this->redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic',[
-            'tx_hubic_tools_hubichubic' => [
-                'action' => 'authenticationResponse',
-                'controller' => 'Backend\Account',
-                'account' => $account
-            ]
-        ]);
-
-
-        $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
-        $formToken = $formProtection->generateToken('AuthorizationRequest');
-        $this->redirect_uri .= '&formToken=' . $formToken;
-
-        $authUrl = $this->client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->redirect_uri);
-
+        $authUrl = $this->OAuth2client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->getRedirectUri($account));
         return $authUrl;
     }
 
@@ -154,7 +119,7 @@ class ClientUtility implements SingletonInterface
      */
     public function getAccountQuota()
     {
-        $response = $this->client->fetch('https://api.hubic.com/1.0/account/usage');
+        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/account/usage');
         return $response;
     }
 
@@ -162,8 +127,9 @@ class ClientUtility implements SingletonInterface
      * Get hubiC agreements
      * @return array
      */
-    public function getAgreement() {
-        $response = $this->client->fetch('https://api.hubic.com/1.0/agreement');
+    public function getAgreement()
+    {
+        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/agreement');
         return $response;
     }
 

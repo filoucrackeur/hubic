@@ -11,16 +11,22 @@
 			<small>accounts manager</small>
 		</h1>
 
+		<f:comment>
+		<f:be.tableList tableName="tx_hubic_domain_model_account" fieldList="{0: 'name', 1: 'client_id'}" clickTitleMode="edit" enableClickMenu="1"  />
+		</f:comment>
+
 		<table class="table table-striped table-hover">
 			<thead>
 			<tr>
 				<th>Account name</th>
+				<th>Action</th>
 			</tr>
 			</thead>
 			<tbody>
 			<f:for each="{accounts}" as="account">
 				<tr class="success">
 					<td class="nowrap"><f:link.action action="show"  arguments="{account: account}">{account.name}</f:link.action></td>
+					<td><f:link.action action="delete" arguments="{account: account}" class="btn btn-default">Delete</f:link.action> </td>
 				</tr>
 			</f:for>
 			</tbody>
