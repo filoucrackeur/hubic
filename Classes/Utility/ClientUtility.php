@@ -16,16 +16,10 @@
 namespace Filoucrackeur\Hubic\Service;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
-use Filoucrackeur\Hubic\Service\OAuth2\Client;
+use Filoucrackeur\Hubic\Service\OAuth\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
-/**
- * Client for hubiC (http://api.hubic.com).
- *
- * @package Filoucrackeur\Hubic
- */
 class ClientUtility implements SingletonInterface
 {
     const AUTHORIZATION_ENDPOINT = 'https://api.hubic.com/oauth/auth/';
@@ -33,9 +27,9 @@ class ClientUtility implements SingletonInterface
     const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
 
     /**
-     * @var \Filoucrackeur\Hubic\Service\OAuth2\Client
+     * @var \Filoucrackeur\Hubic\Service\OAuth\Client
      */
-    protected $OAuth2client;
+    protected $OAuth;
 
     /**
      * @var  \TYPO3\CMS\Extbase\Object\ObjectManager
@@ -55,41 +49,34 @@ class ClientUtility implements SingletonInterface
      */
     protected $account;
 
-    public function __construct()
-    {
-
-    }
-
-
-
     public function callHubic(Account $account) {
         $this->account = $account;
-        $this->OAuth2client = new Client($this->account->getClientId(), $this->account->getClientSecret());
-        $this->OAuth2client->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r');
-        $this->OAuth2client->setAccessTokenType(1);
-//        $this->OAuth2client->setResponseType('code');
-//        $this->OAuth2client->setState(md5(time()));
+        $this->OAuth = new Client($this->account->getClientId(), $this->account->getClientSecret());
+        $this->OAuth->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r');
+        $this->OAuth->setAccessTokenType(1);
+//        $this->OAuth->setResponseType('code');
+//        $this->OAuth->setState(md5(time()));
         if ($this->account->getAccessToken()) {
-            $this->OAuth2client->setAccessToken($this->account->getAccessToken());
+            $this->OAuth->setAccessToken($this->account->getAccessToken());
         } else {
             if (isset($_GET['formToken'])) {
                 $code = str_replace('code=', '', strstr($_GET['formToken'], "code="));
             }
             if (isset($code)) {
                 $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($this->account));
-                $response = $this->OAuth2client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
+                $response = $this->OAuth->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
 
                 $this->account->setAccessToken($response['result']['access_token']);
                 $this->persistenceManager->update($this->account);
                 $this->persistenceManager->persistAll();
-//                $this->OAuth2client->setAccessToken($account->getAccessToken());
+//                $this->OAuth->setAccessToken($account->getAccessToken());
             }
         }
     }
 
     public function getAccount()
     {
-        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/account');
+        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/account');
         return $response;
     }
 
@@ -113,7 +100,7 @@ class ClientUtility implements SingletonInterface
     public function getAuthorizationRequestUrl(Account $account)
     {
         $this->callHubic($account);
-        $authUrl = $this->OAuth2client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->getRedirectUri($account));
+        $authUrl = $this->OAuth->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->getRedirectUri($account));
         return $authUrl;
     }
 
@@ -123,7 +110,7 @@ class ClientUtility implements SingletonInterface
      */
     public function getAccountQuota()
     {
-        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/account/usage');
+        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/account/usage');
         return $response;
     }
 
@@ -133,7 +120,7 @@ class ClientUtility implements SingletonInterface
      */
     public function getAgreement()
     {
-        $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/agreement');
+        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/agreement');
         return $response;
     }
 

@@ -28,7 +28,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName()
     {
         return $this->name;
     }
@@ -44,7 +44,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getClientId(): string
+    public function getClientId()
     {
         return $this->clientId;
     }
@@ -60,7 +60,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getClientSecret(): string
+    public function getClientSecret()
     {
         return $this->clientSecret;
     }
@@ -76,7 +76,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getAccessToken(): string
+    public function getAccessToken()
     {
         return $this->accessToken;
     }
