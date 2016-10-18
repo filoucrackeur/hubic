@@ -16,7 +16,7 @@
 namespace Filoucrackeur\Hubic\Service;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
-use Filoucrackeur\Hubic\Service\OAuth\Client;
+use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\SingletonInterface;
 
@@ -27,7 +27,7 @@ class ClientUtility implements SingletonInterface
     const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
 
     /**
-     * @var \Filoucrackeur\Hubic\Service\OAuth\Client
+     * @var \Filoucrackeur\Hubic\Service\OAuth2\Client
      */
     protected $OAuth;
 
