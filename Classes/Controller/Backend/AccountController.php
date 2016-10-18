@@ -59,11 +59,13 @@ class AccountController extends ActionController
             $clientAccount = $this->client->getAccount();
             $clientAccountQuota = $this->client->getAccountQuota();
             $agreement = $this->client->getAgreement();
+            $links = $this->client->getAllLinks();
             $this->view->assignMultiple([
                 'account' => $account,
                 'clientAccount' => $clientAccount,
                 'clientAccountQuota' => $clientAccountQuota,
-                'agreement' => $agreement
+                'agreement' => $agreement,
+                'links' => $links
             ]);
         } else {
             $this->view->assign('account', $account);
