@@ -39,7 +39,7 @@
 				<tbody>
 				<tr>
 					<td class="nowrap">{clientAccount.result.firstname} {clientAccount.result.lastname}</td>
-					<td><a href="#">{clientAccount.result.email}</a></td>
+					<td><a href="mailto:{clientAccount.result.email}">{clientAccount.result.email}</a></td>
 					<td>{clientAccountQuota.result.quota -> f:format.bytes()}</td>
 					<td>{clientAccountQuota.result.used -> f:format.bytes()}</td>
 					<td>{clientAccount.result.offer}</td>

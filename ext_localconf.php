@@ -3,9 +3,9 @@
     'Filoucrackeur.hubic',
     'hubic',
     array(
-        'Backend/Account' => 'info,config,index'
+        'Backend/Account' => 'index,show,authenticationRequest,authenticationResponse'
     ),
     array(
-        'Backend/Account' => 'info,config,index'
+        'Backend/Account' => 'index,show,authenticationRequest,authenticationResponse'
     )
 );

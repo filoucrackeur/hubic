@@ -19,9 +19,6 @@ use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 /**
@@ -42,47 +39,53 @@ class ClientUtility implements SingletonInterface
 
     /**
      * @var  \TYPO3\CMS\Extbase\Object\ObjectManager
+     * @inject
      */
     protected $objectManager;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
+     * @inject
      */
     protected $persistenceManager;
 
     /**
      * @var \Filoucrackeur\Hubic\Domain\Model\Account
+     * @inject
      */
     protected $account;
 
-    public function __construct(Account $account)
+    public function __construct()
     {
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->persistenceManager = GeneralUtility::makeInstance(PersistenceManager::class);
 
-        $this->OAuth2client = new Client($account->getClientId(), $account->getClientSecret());
+    }
+
+
+
+    public function callHubic(Account $account) {
+        $this->account = $account;
+        $this->OAuth2client = new Client($this->account->getClientId(), $this->account->getClientSecret());
         $this->OAuth2client->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r');
         $this->OAuth2client->setAccessTokenType(1);
 //        $this->OAuth2client->setResponseType('code');
 //        $this->OAuth2client->setState(md5(time()));
-        if ($account->getAccessToken()) {
-            $this->OAuth2client->setAccessToken($account->getAccessToken());
+        if ($this->account->getAccessToken()) {
+            $this->OAuth2client->setAccessToken($this->account->getAccessToken());
         } else {
             if (isset($_GET['formToken'])) {
                 $code = str_replace('code=', '', strstr($_GET['formToken'], "code="));
             }
             if (isset($code)) {
-                $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($account));
+                $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($this->account));
                 $response = $this->OAuth2client->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
 
-                $account->setAccessToken($response['result']['access_token']);
-                $this->persistenceManager->update($account);
+                $this->account->setAccessToken($response['result']['access_token']);
+                $this->persistenceManager->update($this->account);
                 $this->persistenceManager->persistAll();
 //                $this->OAuth2client->setAccessToken($account->getAccessToken());
             }
         }
     }
-
 
     public function getAccount()
     {
@@ -109,6 +112,7 @@ class ClientUtility implements SingletonInterface
 
     public function getAuthorizationRequestUrl(Account $account)
     {
+        $this->callHubic($account);
         $authUrl = $this->OAuth2client->getAuthenticationUrl(self::AUTHORIZATION_ENDPOINT, $this->getRedirectUri($account));
         return $authUrl;
     }
@@ -131,6 +135,14 @@ class ClientUtility implements SingletonInterface
     {
         $response = $this->OAuth2client->fetch('https://api.hubic.com/1.0/agreement');
         return $response;
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function setAccount(Account $account)
+    {
+        $this->account = $account;
     }
 
 }

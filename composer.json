@@ -20,7 +20,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3,<8.0-DEV",
+		"php": ">=7.0,<8.0-DEV",
 		"typo3/cms-backend": "^7.6 || ^8.0",
 		"typo3/cms-core": "^7.6 || ^8.0",
 		"typo3/cms-extbase": "^7.6 || ^8.0",

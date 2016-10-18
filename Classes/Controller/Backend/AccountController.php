@@ -7,6 +7,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
+/**
+ * Class AccountController
+ * @package Filoucrackeur\Hubic\Controller\Backend
+ */
 class AccountController extends ActionController
 {
     /**
@@ -21,6 +25,12 @@ class AccountController extends ActionController
      */
     protected $persistenceManager;
 
+    /**
+     * @var \Filoucrackeur\Hubic\Service\ClientUtility
+     * @inject
+     */
+    protected $client;
+
 
     public function indexAction()
     {
@@ -28,15 +38,16 @@ class AccountController extends ActionController
         $this->view->assign('accounts', $accounts);
     }
 
+    /**
+     * @param Account $account
+     */
     public function showAction(Account $account)
     {
-        /* @var ClientUtility $client */
-        $client = GeneralUtility::makeInstance(ClientUtility::class,$account);
         if ($account->getAccessToken()) {
-
-            $clientAccount = $client->getAccount();
-            $clientAccountQuota = $client->getAccountQuota();
-            $agreement = $client->getAgreement();
+            $this->client->callHubic($account);
+            $clientAccount = $this->client->getAccount();
+            $clientAccountQuota = $this->client->getAccountQuota();
+            $agreement = $this->client->getAgreement();
             $this->view->assignMultiple([
                 'account' => $account,
                 'clientAccount' => $clientAccount,
@@ -48,22 +59,34 @@ class AccountController extends ActionController
         }
     }
 
-
+    /**
+     * @param Account $account
+     */
     public function authenticationRequestAction(Account $account)
     {
-        $this->client = GeneralUtility::makeInstance(ClientUtility::class,$account);
+
+        $account->setAccessToken('');
+        $this->persistenceManager->update($account);
+        $this->persistenceManager->persistAll();
+
+        $this->client->setAccount($account);
         $this->redirectToUri($this->client->getAuthorizationRequestUrl($account));
     }
 
+    /**
+     * @param Account $account
+     */
     public function authenticationResponseAction(Account $account)
     {
-        $this->client = GeneralUtility::makeInstance(ClientUtility::class,$account);
-
+        $this->client->callHubic($account);
         $this->addFlashMessage('Token successfully added', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
         $this->redirect('show', '', '', ['account' => $account]);
     }
 
 
+    /**
+     * @param Account $account
+     */
     public function deleteAction(Account $account)
     {
         $this->persistenceManager->remove($account);
