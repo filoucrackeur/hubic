@@ -1,20 +1,20 @@
-#cat=hubic/usage; type=boolean; label=Get account usage
-usage = 1
-#cat=hubic/account; type=boolean; label=Get account informations
-account = 1
-#cat=hubic/getAllLinks; type=boolean; label=Get all published links in one call
-getAllLinks = 1
-#cat=hubic/credentials; type=boolean; label=Get OpenStack credentials
-credentials = 1
-#cat=hubic/sponsorCode; type=boolean; label=Get sponsoring code
-sponsorCode = 1
-#cat=hubic/activate; type=boolean; label=Send activation email
-activate = 1
-#cat=hubic/sponsored; type=boolean; label=Get sponsored users information
-sponsored = 1
-#cat=hubic/links/delete; type=boolean; label=Delete published link
-linksDelete = 1
-#cat=hubic/links/get; type=boolean; label=Get published links
-linksGet = 1
-#cat=hubic/links/add; type=boolean; label=Add new published links
-linksAdd = 1
+##cat=hubic/usage; type=boolean; label=Get account usage
+#usage = 1
+##cat=hubic/account; type=boolean; label=Get account informations
+#account = 1
+##cat=hubic/getAllLinks; type=boolean; label=Get all published links in one call
+#getAllLinks = 1
+##cat=hubic/credentials; type=boolean; label=Get OpenStack credentials
+#credentials = 1
+##cat=hubic/sponsorCode; type=boolean; label=Get sponsoring code
+#sponsorCode = 1
+##cat=hubic/activate; type=boolean; label=Send activation email
+#activate = 1
+##cat=hubic/sponsored; type=boolean; label=Get sponsored users information
+#sponsored = 1
+##cat=hubic/links/delete; type=boolean; label=Delete published link
+#linksDelete = 1
+##cat=hubic/links/get; type=boolean; label=Get published links
+#linksGet = 1
+##cat=hubic/links/add; type=boolean; label=Add new published links
+#linksAdd = 1
