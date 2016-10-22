@@ -1,4 +1,4 @@
-plugin.tx_hubic_list = USER_INT
+plugin.tx_hubic_list = USER
 plugin.tx_hubic_list {
     persistence {
         storagePid =
