@@ -7,13 +7,13 @@
 				<source>hubiC</source>
 			</trans-unit>
 			<trans-unit id="mlang_labels_tablabel">
-				<source>Management synchronization hubiC</source>
+				<source>Accounts manager hubiC</source>
 			</trans-unit>
 			<trans-unit id="mlang_labels_tabdescr">
-				<source>Management synchronization hubiC TYPO3 CMS</source>
+				<source>Accounts manager hubiC</source>
 			</trans-unit>
 			<trans-unit id="docheader.account.index">
-				<source>Account manager hubiC</source>
+				<source>Accounts manager hubiC</source>
 			</trans-unit>
 			<trans-unit id="docheader.account.config">
 				<source>Configuration</source>
@@ -45,11 +45,38 @@
 			<trans-unit id="account.quota.used">
 				<source>Quota used</source>
 			</trans-unit>
+			<trans-unit id="account.quota.available">
+				<source>Quota available</source>
+			</trans-unit>
 			<trans-unit id="account.offer_name">
 				<source>Offer</source>
 			</trans-unit>
 			<trans-unit id="account.date_creation">
 				<source>Comment</source>
+			</trans-unit>
+			<trans-unit id="account.client_id">
+				<source>Client ID</source>
+			</trans-unit>
+			<trans-unit id="account.client_secret">
+				<source>Client Secret</source>
+			</trans-unit>
+			<trans-unit id="account.access_token">
+				<source>Access Token</source>
+			</trans-unit>
+			<trans-unit id="account.information">
+				<source>Account informations</source>
+			</trans-unit>
+			<trans-unit id="account.btn.get_autorization">
+				<source>Get hubiC autorization WebApp</source>
+			</trans-unit>
+			<trans-unit id="no_account">
+				<source>No account</source>
+			</trans-unit>
+			<trans-unit id="account.name">
+				<source>Account name</source>
+			</trans-unit>
+			<trans-unit id="action">
+				<source>Action</source>
 			</trans-unit>
 		</body>
 	</file>

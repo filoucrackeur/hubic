@@ -91,8 +91,11 @@ class AccountController extends ActionController
      */
     public function authenticationResponseAction(Account $account)
     {
-        $this->client->callHubic($account);
-        $this->addFlashMessage('Token successfully added', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
+        if( $this->client->callHubic($account) ){
+            $this->addFlashMessage('Token successfully added', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
+        }else {
+            $this->addFlashMessage('Failed getting token please check client ID and client secret', 'Authentication request', \TYPO3\CMS\Core\Messaging\AbstractMessage::ERROR);
+        }
         $this->redirect('show', '', '', ['account' => $account]);
     }
 
@@ -109,5 +112,17 @@ class AccountController extends ActionController
         $this->persistenceManager->remove($account);
         $this->addFlashMessage('Account successfully deleted', 'Account', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
         $this->redirect('index');
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function unlinkAction(Account $account)
+    {
+        $account->setAccessToken('');
+        $this->persistenceManager->update($account);
+        $this->persistenceManager->persistAll();
+        $this->addFlashMessage('Account successfully unlinked', 'Account', \TYPO3\CMS\Core\Messaging\AbstractMessage::OK);
+        $this->redirect('show', '', '', ['account' => $account]);
     }
 }

@@ -6,87 +6,196 @@
 	</f:section>
 
 	<f:section name="main">
+		<script>
+			function graphe_camembert() {
+
+				var canvas = document.getElementById('camembert');
+				var context = canvas.getContext('2d');
+
+				var quotaTotal = {clientAccountQuota.result.quota};
+				var quotaUsed = {clientAccountQuota.result.used};
+				var percentQuotaUsed = (100/quotaTotal)*quotaUsed;
+
+				// donnees en pourcentage
+				var donnees = [percentQuotaUsed,100-percentQuotaUsed];
+
+				var diametre = Math.min(canvas.height, canvas.width) - 100;
+				var rayon = diametre / 2;
+
+				// position du centre du camembert
+				var position_x = rayon + 20;
+				var position_y = canvas.height / 2 + 20;
+
+				var nb_donnees = donnees.length;
+				var angle_initial = 0;
+				var stylecolors = ['#126998', '#EDEDED'];
+
+				var largeur_rect = 15;
+				var legendes = ['<f:translate key="account.quota.used"/>','<f:translate key="account.quota.available"/>'];
+
+				for(var i=0;i<nb_donnees; i++) {
+					var angles_degre = (donnees[i] / 100) * 360;// conversion pourcentage -> angle en degré
+					DessinerAngle(context,position_x,position_y,rayon,angle_initial,angles_degre,stylecolors[i]);
+					angle_initial += angles_degre;
+
+					DessinerRectangle(
+						context,
+						diametre + 30,
+						(largeur_rect + 3) * (i + 1),
+						largeur_rect,largeur_rect,
+						stylecolors[i]
+					);
+					context.font = '12pt Share';//legendes
+					context.fillStyle = '#000';//legendes
+					context.fillText(legendes[i] + ' (' + Math.round(donnees[i],2) +' %)',diametre + 55,18 * i+30);//legendes
+				}
+//				context.fillText('{clientAccount.result.firstname} {clientAccount.result.lastname}',diametre+50,150);
+			}
+			// petit rectangle pour la légende
+			function DessinerRectangle(context,x0,y0,xl,yl,coloration) {
+				context.beginPath();
+				context.fillStyle = coloration;
+				context.fillRect(x0,y0,xl,yl);
+				context.closePath();
+				context.fill();
+			}
+			function DessinerAngle(context,position_x,position_y,rayon,angle_initial,angles_degre,couleurs) {
+				context.beginPath();
+				context.fillStyle  = couleurs;
+				var angle_initial_radian = angle_initial / (180 / Math.PI);// conversion angle en degré -> angle en radian
+				var angles_radian = angles_degre / (180 / Math.PI);// conversion angle en degré -> angle en radian
+				context.arc(position_x,position_y,rayon,angle_initial_radian,angle_initial_radian + angles_radian,0);
+				context.lineTo(position_x, position_y);
+				context.closePath();
+				context.fill();
+			}
+
+			window.addEventListener("load", graphe_camembert, false);
+
+		</script>
+		<style type="text/css">
+			canvas {
+				border: 1px solid #cccccc;
+				background-color: #F7F7F7;
+			}
+			#hubic-data-account, #hubic-data-api {
+				border-spacing: 5px 5px;
+				border-collapse: separate;
+				margin-bottom: 15px;
+			}
+
+			#hubic-data-account th, #hubic-data-api th {
+				color: #086594;
+				width: 200px;
+			}
+		</style>
+
 		<h1><f:image src="typo3conf/ext/hubic/Resources/Public/Images/hubic-logo.png"/>
-			<small>Account detail {account.name}</small>
+			<small>{account.name}</small>
 		</h1>
-		<f:be.infobox title="hubiC API" state="-1">
-			<b>Client ID</b> {account.clientId}<br/>
-			<b>Client Secret</b> {account.clientSecret}<br/>
+
+		<f:be.infobox title="informations API" state="-1">
 			<f:if condition="{account.accessToken}">
 				<f:then>
-					<b>Access Token</b> {account.accessToken}
+					<table id="hubic-data-api">
+						<tbody>
+							<tr>
+								<th><f:translate key="account.client_id"/></th>
+								<td>{account.clientId}</td>
+							</tr>
+							<tr>
+								<th><f:translate key="account.client_secret"/></th>
+								<td>{account.clientSecret}</td>
+							</tr>
+							<tr>
+								<th><f:translate key="account.access_token"/></th>
+								<td>{account.accessToken}</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="hubic-data-account">
+						<tbody>
+							<tr>
+								<th>
+									<f:translate key="account.firstname_lastname"/>
+								</th>
+								<td>{clientAccount.result.firstname} {clientAccount.result.lastname}</td>
+							</tr>
+							<tr>
+								<th>
+									<f:translate key="account.email"/>
+								</th>
+								<td>{clientAccount.result.email}</td>
+							</tr>
+							<tr>
+								<th>
+									<f:translate key="account.offer_name"/>
+								</th>
+								<td>{clientAccount.result.offer}</td>
+							</tr>
+							<tr>
+								<th>
+									<f:translate key="account.quota.total"/>
+								</th>
+								<td>{clientAccountQuota.result.quota -> f:format.bytes()}</td>
+							</tr>
+						</tbody>
+					</table>
 					<p>
 						<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">Refresh
 							Token
+						</f:link.action>
+						<f:link.action action="unlink" arguments="{account: account}" class="btn btn-danger">unlink account
 						</f:link.action>
 					</p>
 				</f:then>
 				<f:else>
 					<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">
-						Autorization Request hubiC
+						<f:translate key="account.btn.get_autorization"/>
 					</f:link.action>
 				</f:else>
 			</f:if>
 		</f:be.infobox>
+
+
 		<f:if condition="{account.accessToken}">
-			<table class="table table-striped table-hover">
-				<thead>
-				<tr>
-					<th><f:translate key="account.firstname_lastname"/></th>
-					<th><f:translate key="account.email"/></th>
-					<th><f:translate key="account.quota.total"/></th>
-					<th><f:translate key="account.quota.used"/></th>
-					<th><f:translate key="account.offer_name"/></th>
-					<th><f:translate key="account.date_creation"/></th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td class="nowrap">{clientAccount.result.firstname} {clientAccount.result.lastname}</td>
-					<td><a href="mailto:{clientAccount.result.email}">{clientAccount.result.email}</a></td>
-					<td>{clientAccountQuota.result.quota -> f:format.bytes()}</td>
-					<td>{clientAccountQuota.result.used -> f:format.bytes()}</td>
-					<td>{clientAccount.result.offer}</td>
-					<td>
-						<f:format.date format="d/m/Y">{clientAccount.result.creationDate}</f:format.date>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</f:if>
+			<canvas id="camembert" width="600" height="450"></canvas>
 
-
-		<f:if condition="{links.result}">
-			<table class="table table-striped table-hover">
-				<thead>
-				<tr>
-					<th><f:translate key="account.shared_links" /></th>
-					<th><f:translate key="account.link_comment" /></th>
-				</tr>
-				</thead>
-				<tbody>
-				<f:for each="{links.result}" as="link">
+			<f:if condition="{links.result}">
+				<table class="table table-striped table-hover">
+					<thead>
 					<tr>
-						<td class="nowrap">
-							<f:if condition="{link.type} == 'dir'">
-								<f:then>
-									<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-folder-default.svg"
-											 width="16" height="16">
-								</f:then>
-								<f:else>
-									<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-page-default.svg"
-											 width="16" height="16">
-								</f:else>
-							</f:if>
-							<f:link.typolink parameter="{link.indirectUrl}">
-								{link.uri}
-							</f:link.typolink>
-						</td>
-						<td>{link.comment}</td>
+						<th><f:translate key="account.shared_links" /></th>
+						<th><f:translate key="account.link_comment" /></th>
 					</tr>
-				</f:for>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+					<f:for each="{links.result}" as="link">
+						<tr>
+							<td class="nowrap">
+								<f:if condition="{link.type} == 'dir'">
+									<f:then>
+										<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-folder-default.svg"
+												 width="16" height="16">
+									</f:then>
+									<f:else>
+										<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-page-default.svg"
+												 width="16" height="16">
+									</f:else>
+								</f:if>
+								<f:link.typolink parameter="{link.indirectUrl}">
+									{link.uri}
+								</f:link.typolink>
+							</td>
+							<td>{link.comment}</td>
+						</tr>
+					</f:for>
+					</tbody>
+				</table>
+			</f:if>
 		</f:if>
+
+
+
 	</f:section>
 </div>

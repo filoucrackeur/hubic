@@ -70,9 +70,20 @@ class ClientUtility implements SingletonInterface
                 $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($this->account));
                 $response = $this->OAuth->getAccessToken(self::TOKEN_ENDPOINT, 'authorization_code', $params);
 
-                $this->account->setAccessToken($response['result']['access_token']);
-                $this->persistenceManager->update($this->account);
-                $this->persistenceManager->persistAll();
+                if( $response ){
+                    if( $response['code'] == 200 ){
+                        $this->account->setAccessToken($response['result']['access_token']);
+                        $this->persistenceManager->update($this->account);
+                        $this->persistenceManager->persistAll();
+                        return true;
+                    }else {
+                        return false;
+//                        throw new \Exception('hubiC Api :  '.implode(' ',$response['result']));
+                    }
+                } else {
+                    return false;
+//                    throw new \Exception('no response from hubiC Api');
+                }
 //                $this->OAuth->setAccessToken($account->getAccessToken());
             }
         }
