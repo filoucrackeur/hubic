@@ -8,13 +8,15 @@
 		"issues": "https://github.com/filoucrackeur/hubic/issues"
 	},
 	"keywords": [
-		"hubic",
-		"cloud"
+		"hubiC",
+		"cloud",
+		"api",
+		"account"
 	],
 	"authors": [
 		{
 			"name": "Philippe Court",
-			"email": "philippe.court@gmail.com",
+			"email": "contact@webstationservice.fr",
 			"role": "Developer",
 			"homepage": "https://github.com/filoucrackeur/"
 		}
@@ -30,6 +32,7 @@
 	},
 	"replace": {
 		"hubic": "self.version",
+		"filoucrackeur/hubic": "self.version",
 		"typo3-ter/hubic": "self.version"
 	},
 	"autoload": {
