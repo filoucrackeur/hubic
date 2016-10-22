@@ -4,7 +4,7 @@
 .. _start:
 
 =============================================================
-Extension Name
+hubic
 =============================================================
 
 .. only:: html
@@ -19,7 +19,7 @@ Extension Name
 		en
 
 	:Description:
-		Manual covering TYPO3 extension <extension name>
+		Manual covering TYPO3 extension hubic
 
 	:Keywords:
 		hubiC,cloud,account,api
