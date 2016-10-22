@@ -1,9 +1,9 @@
 # ![hubiC](ext_icon.png) hubiC cloud by OVH
 
 [![Build Status](https://travis-ci.org/filoucrackeur/hubic.svg?branch=master)](https://travis-ci.org/filoucrackeur/hubic) 
-[![Coverage Status](https://coveralls.io/repos/github/romm/formz/badge.svg?branch=master)](https://coveralls.io/github/romm/formz?branch=master) 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/romm/formz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/romm/formz/?branch=master) 
-
+[![Coverage Status](https://coveralls.io/repos/github/filoucrackeur/hubic/badge.svg?branch=master)](https://coveralls.io/github/filoucrackeur/hubic?branch=master) 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master) 
+[![Total Downloads](https://poser.pugx.org/filoucrackeur/hubic/downloads)](https://packagist.org/packages/filoucrackeur/hubic) 
 > This extension lets you connect as many hubiC account as you want with TYPO3. You can manage the accounts in a TYPO3 backend module.
 
 > ![Slack](http://betanews.com/wp-content/uploads/2015/03/slack_logo-50x50.jpg) Join the discussion on Slack in channel [**#ext-hubic**](https://typo3.slack.com/messages/ext-hubic)! – You don't have access to TYPO3 Slack? Get your Slack invitation [by clicking here](https://forger.typo3.org/slack)!
@@ -31,3 +31,6 @@ Add an app with your domain where your TYPO3 is installed. You must give a name 
 
 
 ### Available Services for TYPO3
+
+
+
