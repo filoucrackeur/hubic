@@ -52,7 +52,10 @@
 				<source>Offer</source>
 			</trans-unit>
 			<trans-unit id="account.date_creation">
-				<source>Comment</source>
+				<source>Creation date</source>
+			</trans-unit>
+			<trans-unit id="account.date_expiration">
+				<source>Expiration date</source>
 			</trans-unit>
 			<trans-unit id="account.client_id">
 				<source>Client ID</source>

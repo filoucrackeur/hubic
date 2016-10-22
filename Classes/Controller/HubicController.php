@@ -3,6 +3,7 @@ namespace Filoucrackeur\Hubic\Controller;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class HubicController extends ActionController {
 
@@ -13,9 +14,14 @@ class HubicController extends ActionController {
     protected $client;
 
     /**
-     * @param Account $account
+     * @var \Filoucrackeur\Hubic\Domain\Repository\AccountRepository
+     * @inject
      */
-    public function listAction(Account $account) {
+    protected $accountRepository;
+
+    public function listAction() {
+        $account = $this->accountRepository->findByIdentifier($this->settings['account']);
+        $this->client->callHubic($account);
         $this->view->assign('links', $this->client->getAllLinks());
     }
 
