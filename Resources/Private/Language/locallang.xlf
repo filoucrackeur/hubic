@@ -21,6 +21,36 @@
 			<trans-unit id="docheader.account.info">
 				<source>Informations</source>
 			</trans-unit>
+			<trans-unit id="account.delete">
+				<source>Delete account</source>
+			</trans-unit>
+			<trans-unit id="account.add">
+				<source>Add account</source>
+			</trans-unit>
+			<trans-unit id="account.shared_links">
+				<source>Shared Links</source>
+			</trans-unit>
+			<trans-unit id="account.link_comment">
+				<source>Comment</source>
+			</trans-unit>
+			<trans-unit id="account.firstname_lastname">
+				<source>Firstname &amp; Lastname</source>
+			</trans-unit>
+			<trans-unit id="account.email">
+				<source>Email</source>
+			</trans-unit>
+			<trans-unit id="account.quota.total">
+				<source>Quota total</source>
+			</trans-unit>
+			<trans-unit id="account.quota.used">
+				<source>Quota used</source>
+			</trans-unit>
+			<trans-unit id="account.offer_name">
+				<source>Offer</source>
+			</trans-unit>
+			<trans-unit id="account.date_creation">
+				<source>Comment</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

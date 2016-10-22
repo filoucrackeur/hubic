@@ -8,7 +8,7 @@ if (TYPO3_MODE === 'BE') {
             'hubic',         // Name of the module
             '',             // Position of the module
             array(          // Allowed controller action combinations
-                'Backend\Account' => 'index,show,authenticationRequest,authenticationResponse'
+                'Backend\Account' => 'index,show,delete,add,authenticationRequest,authenticationResponse'
             ),
             array(          // Additional configuration
                 'access' => 'user,group',

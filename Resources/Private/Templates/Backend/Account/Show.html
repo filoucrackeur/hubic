@@ -6,21 +6,25 @@
 	</f:section>
 
 	<f:section name="main">
-		<h1><img src="https://hubic.com/images/logo.png" alt="hubiC"/>
+		<h1><f:image src="typo3conf/ext/hubic/Resources/Public/Images/hubic-logo.png"/>
 			<small>Account detail {account.name}</small>
 		</h1>
-		<f:be.infobox title="hubiC API">
+		<f:be.infobox title="hubiC API" state="-1">
 			<b>Client ID</b> {account.clientId}<br/>
 			<b>Client Secret</b> {account.clientSecret}<br/>
 			<f:if condition="{account.accessToken}">
 				<f:then>
 					<b>Access Token</b> {account.accessToken}
 					<p>
-					<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">Refresh Token</f:link.action>
+						<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">Refresh
+							Token
+						</f:link.action>
 					</p>
 				</f:then>
 				<f:else>
-					<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">Autorization Request hubiC</f:link.action>
+					<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">
+						Autorization Request hubiC
+					</f:link.action>
 				</f:else>
 			</f:if>
 		</f:be.infobox>
@@ -28,12 +32,12 @@
 			<table class="table table-striped table-hover">
 				<thead>
 				<tr>
-					<th>Prénom & Nom</th>
-					<th>Email</th>
-					<th>Quota total</th>
-					<th>Quota utilisé</th>
-					<th>Offre commercial</th>
-					<th>Date Création</th>
+					<th><f:translate key="account.firstname_lastname"/></th>
+					<th><f:translate key="account.email"/></th>
+					<th><f:translate key="account.quota.total"/></th>
+					<th><f:translate key="account.quota.used"/></th>
+					<th><f:translate key="account.offer_name"/></th>
+					<th><f:translate key="account.date_creation"/></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -47,6 +51,40 @@
 						<f:format.date format="d/m/Y">{clientAccount.result.creationDate}</f:format.date>
 					</td>
 				</tr>
+				</tbody>
+			</table>
+		</f:if>
+
+
+		<f:if condition="{links.result}">
+			<table class="table table-striped table-hover">
+				<thead>
+				<tr>
+					<th><f:translate key="account.shared_links" /></th>
+					<th><f:translate key="account.link_comment" /></th>
+				</tr>
+				</thead>
+				<tbody>
+				<f:for each="{links.result}" as="link">
+					<tr>
+						<td class="nowrap">
+							<f:if condition="{link.type} == 'dir'">
+								<f:then>
+									<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-folder-default.svg"
+											 width="16" height="16">
+								</f:then>
+								<f:else>
+									<img src="/typo3/sysext/core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-page-default.svg"
+											 width="16" height="16">
+								</f:else>
+							</f:if>
+							<f:link.typolink parameter="{link.indirectUrl}">
+								{link.uri}
+							</f:link.typolink>
+						</td>
+						<td>{link.comment}</td>
+					</tr>
+				</f:for>
 				</tbody>
 			</table>
 		</f:if>

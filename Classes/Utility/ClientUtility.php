@@ -26,6 +26,10 @@ class ClientUtility implements SingletonInterface
 
     const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
 
+    const DOMAIN_API = 'https://api.hubic.com/';
+
+    const VERSION_API = '1.0';
+
     /**
      * @var \Filoucrackeur\Hubic\Service\OAuth2\Client
      */
@@ -52,7 +56,7 @@ class ClientUtility implements SingletonInterface
     public function callHubic(Account $account) {
         $this->account = $account;
         $this->OAuth = new Client($this->account->getClientId(), $this->account->getClientSecret());
-        $this->OAuth->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.r');
+        $this->OAuth->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw');
         $this->OAuth->setAccessTokenType(1);
 //        $this->OAuth->setResponseType('code');
 //        $this->OAuth->setState(md5(time()));
@@ -76,7 +80,7 @@ class ClientUtility implements SingletonInterface
 
     public function getAccount()
     {
-        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/account');
+        $response = $this->OAuth->fetch(self::DOMAIN_API . self::VERSION_API . '/account');
         return $response;
     }
 
@@ -106,21 +110,37 @@ class ClientUtility implements SingletonInterface
 
     /**
      * Get hubiC account Quota
+     *
+     * @see https://api.hubic.com/console/
      * @return array
      */
     public function getAccountQuota()
     {
-        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/account/usage');
+        $response = $this->OAuth->fetch(self::DOMAIN_API . self::VERSION_API . '/account/usage');
         return $response;
     }
 
     /**
      * Get hubiC agreements
+     *
+     * @see https://api.hubic.com/console/
      * @return array
      */
     public function getAgreement()
     {
-        $response = $this->OAuth->fetch('https://api.hubic.com/1.0/agreement');
+        $response = $this->OAuth->fetch(self::DOMAIN_API . self::VERSION_API . '/agreement');
+        return $response;
+    }
+
+    /**
+     * Get hubiC getAllLinks
+     *
+     * @see https://api.hubic.com/console/
+     * @return array
+     */
+    public function getAllLinks()
+    {
+        $response = $this->OAuth->fetch(self::DOMAIN_API . self::VERSION_API . '/account/getAllLinks');
         return $response;
     }
 

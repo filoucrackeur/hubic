@@ -2,6 +2,11 @@ plugin.tx_hubic {
     persistence {
         storagePid =
     }
+    view {
+        templateRootPath = EXT:hubic/Resources/Private/Templates/
+        partialRootPath = EXT:hubic/Resources/Private/Partials/
+        layoutRootPath = EXT:hubic/Resources/Private/Layouts/
+    }
 }
 
 module.tx_hubic {

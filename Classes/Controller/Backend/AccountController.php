@@ -96,6 +96,10 @@ class AccountController extends ActionController
         $this->redirect('show', '', '', ['account' => $account]);
     }
 
+    public function addAction() {
+
+    }
+
 
     /**
      * @param Account $account

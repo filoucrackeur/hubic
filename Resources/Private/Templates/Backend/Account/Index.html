@@ -2,12 +2,11 @@
 		 xmlns:f="http://xsd.helmut-hummel.de/ns/TYPO3/CMS/Fluid/ViewHelpers">
 	<f:layout name="module"/>
 
-
 	<f:section name="iconButtons">
 	</f:section>
 
 	<f:section name="main">
-		<h1><img src="https://hubic.com/images/logo.png" alt="hubiC"/>
+		<h1><f:image src="typo3conf/ext/hubic/Resources/Public/Images/hubic-logo.png"/>
 			<small>accounts manager</small>
 		</h1>
 
@@ -21,8 +20,12 @@
 			<tbody>
 			<f:for each="{accounts}" as="account">
 				<tr class="success">
-					<td class="nowrap"><f:link.action action="show"  arguments="{account: account}">{account.name}</f:link.action></td>
-					<td><f:link.action action="delete" arguments="{account: account}" class="btn btn-default">Delete</f:link.action> </td>
+					<td class="nowrap">
+						<f:link.action action="show" arguments="{account: account}">{account.name}</f:link.action>
+					</td>
+					<td>
+						<f:link.action action="delete" arguments="{account: account}" class="btn btn-default"><f:translate key="account.delete" /></f:link.action>
+					</td>
 				</tr>
 			</f:for>
 			</tbody>

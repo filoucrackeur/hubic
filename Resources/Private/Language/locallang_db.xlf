@@ -4,7 +4,7 @@
 		<header/>
 		<body>
 			<trans-unit id="tx_hubic_domain_model_account">
-				<source>hubiC Account</source>
+				<source>Account</source>
 			</trans-unit>
 		</body>
 	</file>
