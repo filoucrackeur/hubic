@@ -1,8 +1,9 @@
 # ![hubiC](ext_icon.png) hubiC cloud by OVH
 
 [![Build Status](https://travis-ci.org/filoucrackeur/hubic.svg?branch=master)](https://travis-ci.org/filoucrackeur/hubic) 
-[![Coverage Status](https://coveralls.io/repos/github/filoucrackeur/hubic/badge.svg?branch=master)](https://coveralls.io/github/filoucrackeur/hubic?branch=master) 
+[![Code Coverage](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master) 
+[![Build Status](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/build.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/build-status/master)
 [![Total Downloads](https://poser.pugx.org/filoucrackeur/hubic/downloads)](https://packagist.org/packages/filoucrackeur/hubic) 
 > This extension lets you connect as many hubiC account as you want with TYPO3. You can manage the accounts in a TYPO3 backend module.
 
