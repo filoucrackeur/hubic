@@ -50,7 +50,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $name
      */
-    public function setName(string $name)
+    public function setName(\string $name)
     {
         $this->name = $name;
     }
@@ -66,7 +66,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $clientId
      */
-    public function setClientId(string $clientId)
+    public function setClientId(\string $clientId)
     {
         $this->clientId = $clientId;
     }
