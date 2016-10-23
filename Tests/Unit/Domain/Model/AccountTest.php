@@ -39,11 +39,13 @@ class AccountTest extends AbstractUnitTest
     /**
      * @test
      */
-    public function setClientId()
-    {
-        $id = (string)"465464";
-        $this->account->setClientId($id);
+    public function setNameForStringSetsName() {
+        $this->account->setName('Account test');
 
-        $this->assertEquals($this->account->getClientId(),$id);
+        $this->assertAttributeEquals(
+            'Account test',
+            'name',
+            $this->account
+        );
     }
 }
