@@ -20,22 +20,22 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
 class Account extends AbstractDomainObject  {
 
     /**
-     * @var \string
+     * @var string
      */
     protected $name;
 
     /**
-     * @var \string
+     * @var string
      */
     protected $clientId;
 
     /**
-     * @var \string
+     * @var string
      */
     protected $clientSecret;
 
     /**
-     * @var \string
+     * @var string
      */
     protected $accessToken;
 
