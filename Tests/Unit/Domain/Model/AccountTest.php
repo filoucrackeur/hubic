@@ -24,31 +24,25 @@ class AccountTest extends AbstractUnitTest
     /**
      * @var Account
      */
-    protected $subject = NULL;
+    protected $account = NULL;
 
     public function setUp()
     {
-        $this->subject = new Account();
+        $this->account = new Account();
     }
 
     public function tearDown()
     {
-        unset($this->subject);
+        unset($this->account);
     }
 
     /**
      * @test
      */
-    public function alwaysTrue()
+    public function setClientId()
     {
-        $this->assertTrue(true);
-    }
+        $this->account->setClientId('465464');
 
-    /**
-     * @test
-     */
-    public function dummyTestToNotLeaveThisFileEmpty()
-    {
-        $this->markTestIncomplete();
+        $this->assertEquals($this->account->getClientId(),'465464');
     }
 }
