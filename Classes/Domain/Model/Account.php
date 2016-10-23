@@ -50,7 +50,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $name
      */
-    public function setName(\string $name)
+    public function setName($name)
     {
         $this->name = $name;
     }
@@ -66,7 +66,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $clientId
      */
-    public function setClientId(\string $clientId)
+    public function setClientId($clientId)
     {
         $this->clientId = $clientId;
     }
@@ -82,7 +82,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $clientSecret
      */
-    public function setClientSecret(string $clientSecret)
+    public function setClientSecret($clientSecret)
     {
         $this->clientSecret = $clientSecret;
     }
@@ -98,7 +98,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $accessToken
      */
-    public function setAccessToken(string $accessToken)
+    public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
     }
