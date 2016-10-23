@@ -25,7 +25,8 @@
 		"php": ">=5.6,<8.0-DEV"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "~4.8.0"
+		"phpunit/phpunit": "~4.8.0",
+		"satooshi/php-coverall": "dev-master"
 	},
 	"replace": {
 		"hubic": "self.version",
