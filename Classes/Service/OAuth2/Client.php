@@ -486,14 +486,16 @@ class Client
     private function convertToCamelCase($grant_type)
     {
         $parts = explode('_', $grant_type);
-        array_walk($parts, function(&$item) { $item = ucfirst($item);});
+        array_walk($parts, function (&$item) {
+            $item = ucfirst($item);
+        });
         return implode('', $parts);
     }
 
     /**
      * @return string
      */
-    public function getScope(): string
+    public function getScope()
     {
         return $this->scope;
     }
