@@ -34,7 +34,7 @@ class Client
     const HTTP_METHOD_PUT    = 'PUT';
     const HTTP_METHOD_DELETE = 'DELETE';
     const HTTP_METHOD_HEAD   = 'HEAD';
-    const HTTP_METHOD_PATCH   = 'PATCH';
+    const HTTP_METHOD_PATCH = 'PATCH';
 
     /**
      * HTTP Form content types
@@ -138,7 +138,7 @@ class Client
         $this->client_secret = $client_secret;
         $this->client_auth   = $client_auth;
         $this->certificate_file = $certificate_file;
-        if (!empty($this->certificate_file)  && !is_file($this->certificate_file)) {
+        if (!empty($this->certificate_file) && !is_file($this->certificate_file)) {
             throw new InvalidArgumentException('The certificate file was not found', InvalidArgumentException::CERTIFICATE_NOT_FOUND);
         }
     }
@@ -197,7 +197,7 @@ class Client
             throw new InvalidArgumentException('The grant_type is mandatory.', InvalidArgumentException::INVALID_GRANT_TYPE);
         }
         $grantTypeClassName = $this->convertToCamelCase($grant_type);
-        $grantTypeClass =  __NAMESPACE__ . '\\GrantType\\' . $grantTypeClassName;
+        $grantTypeClass = __NAMESPACE__ . '\\GrantType\\' . $grantTypeClassName;
         if (!class_exists($grantTypeClass)) {
             throw new InvalidArgumentException('Unknown grant type \'' . $grant_type . '\'', InvalidArgumentException::INVALID_GRANT_TYPE);
         }
@@ -216,7 +216,7 @@ class Client
                 break;
             case self::AUTH_TYPE_AUTHORIZATION_BASIC:
                 $parameters['client_id'] = $this->client_id;
-                $http_headers['Authorization'] = 'Basic ' . base64_encode($this->client_id .  ':' . $this->client_secret);
+                $http_headers['Authorization'] = 'Basic ' . base64_encode($this->client_id . ':' . $this->client_secret);
                 break;
             default:
                 throw new Exception('Unknown client auth type.', Exception::INVALID_CLIENT_AUTHENTICATION_TYPE);
@@ -392,7 +392,7 @@ class Client
             CURLOPT_CUSTOMREQUEST  => $http_method
         );
 
-        switch($http_method) {
+        switch ($http_method) {
             case self::HTTP_METHOD_POST:
                 $curl_options[CURLOPT_POST] = true;
                 /* No break */
@@ -404,7 +404,7 @@ class Client
                  * while passing a URL-encoded string will encode the data as application/x-www-form-urlencoded.
                  * http://php.net/manual/en/function.curl-setopt.php
                  */
-                if(is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
+                if (is_array($parameters) && self::HTTP_FORM_CONTENT_TYPE_APPLICATION === $form_content_type) {
                     $parameters = http_build_query($parameters, null, '&');
                 }
                 $curl_options[CURLOPT_POSTFIELDS] = $parameters;
@@ -428,7 +428,7 @@ class Client
 
         if (is_array($http_headers)) {
             $header = array();
-            foreach($http_headers as $key => $parsed_urlvalue) {
+            foreach ($http_headers as $key => $parsed_urlvalue) {
                 $header[] = "$key: $parsed_urlvalue";
             }
             $curl_options[CURLOPT_HTTPHEADER] = $header;
@@ -486,7 +486,7 @@ class Client
     private function convertToCamelCase($grant_type)
     {
         $parts = explode('_', $grant_type);
-        array_walk($parts, function (&$item) {
+        array_walk($parts, function(&$item) {
             $item = ucfirst($item);
         });
         return implode('', $parts);
