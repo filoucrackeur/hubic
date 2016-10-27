@@ -1,4 +1,4 @@
-# ![hubiC](ext_icon.png) hubiC cloud by OVH
+# ![hubiC](Resources/Public/Images/hubic-logo.png) shared links for TYPO3
 
 [![Build Status](https://travis-ci.org/filoucrackeur/hubic.svg?branch=master)](https://travis-ci.org/filoucrackeur/hubic) 
 [![Code Coverage](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master)
@@ -27,11 +27,51 @@ Add an app with your domain where your TYPO3 is installed. You must give a name 
 2. Go in TYPO3 extension Manager and activate "hubic" extension if is not already done
 3. Go in the new menu "hubiC" in TYPO3 backend
 
-
 ## How it works
+1. First go in your hubiC account [hubiC](https://hubic.com/home/)
+2. Go in a page or sysfolder to add an "hubiC > Account"
 
+![](Documentation/Images/NewRecordHubic.png)
 
-### Available Services for TYPO3
+3. Fill required fields
 
+![](Documentation/Images/CreateNewAccount.png)
+
+4. Go in the Admin tools > hubiC module menu
+
+![](Documentation/Images/BackendMenuHubiC.png)
+
+5. Click on the account you want to configure.
+ 
+![](Documentation/Images/HubiCBackendModuleList.png)
+
+6. Click on the button to get hubiC authorization WebApp
+
+![](Documentation/Images/HubiCBackendModuleShowNotAuthenticated.png)
+
+7. Fill your email and password and click on "Accept"
+
+![](Documentation/Images/HubiCAuthentication.png)
+
+8. If you success getting token 
+
+![](Documentation/Images/TokenAdded.png)
+
+9. Click in the account to see details
+
+![](Documentation/Images/HubiCBackendModuleShow.png)
+
+10. Add plugin in a page to list shared links
+
+![](Documentation/Images/HubiCPluginConfiguration.png)
+
+11. Go in frontend to view the result
+
+![](Documentation/Images/FrontendPluginPreview.png)
+
+### References
+
+* [hubiC API](http://api.hubic.com)
+* [hubiC docs extension TYPO3](https://typo3.org/extensions/repository/view/hubic)
 
 
