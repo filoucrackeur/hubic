@@ -16,7 +16,6 @@
 namespace Filoucrackeur\Hubic\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class AccountRepository extends  Repository  {
 

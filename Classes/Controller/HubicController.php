@@ -1,9 +1,7 @@
 <?php
 namespace Filoucrackeur\Hubic\Controller;
 
-use Filoucrackeur\Hubic\Domain\Model\Account;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class HubicController extends ActionController {
 
