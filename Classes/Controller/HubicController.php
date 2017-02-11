@@ -6,7 +6,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 class HubicController extends ActionController {
 
     /**
-     * @var \Filoucrackeur\Hubic\Service\ClientUtility
+     * @var \Filoucrackeur\Hubic\Utility\ClientUtility
      * @inject
      */
     protected $client;

@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace Filoucrackeur\Hubic\Service;
+namespace Filoucrackeur\Hubic\Utility;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Service\OAuth2\Client;

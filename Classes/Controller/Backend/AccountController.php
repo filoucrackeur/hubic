@@ -37,7 +37,7 @@ class AccountController extends ActionController
     protected $persistenceManager;
 
     /**
-     * @var \Filoucrackeur\Hubic\Service\ClientUtility
+     * @var \Filoucrackeur\Hubic\Utility\ClientUtility
      * @inject
      */
     protected $client;
