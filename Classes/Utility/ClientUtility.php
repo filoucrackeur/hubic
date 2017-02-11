@@ -18,6 +18,7 @@ namespace Filoucrackeur\Hubic\Service;
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\FormProtection\FormProtectionFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 
 class ClientUtility implements SingletonInterface
@@ -53,13 +54,16 @@ class ClientUtility implements SingletonInterface
      */
     protected $account;
 
+    /**
+     * @param Account $account
+     * @return bool
+     */
     public function callHubic(Account $account) {
         $this->account = $account;
         $this->OAuth = new Client($this->account->getClientId(), $this->account->getClientSecret());
         $this->OAuth->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw');
         $this->OAuth->setAccessTokenType(1);
-//        $this->OAuth->setResponseType('code');
-//        $this->OAuth->setState(md5(time()));
+
         if ($this->account->getAccessToken()) {
             $this->OAuth->setAccessToken($this->account->getAccessToken());
         } else {
@@ -78,15 +82,13 @@ class ClientUtility implements SingletonInterface
                         return true;
                     }else {
                         return false;
-//                        throw new \Exception('hubiC Api :  '.implode(' ',$response['result']));
                     }
                 } else {
                     return false;
-//                    throw new \Exception('no response from hubiC Api');
                 }
-//                $this->OAuth->setAccessToken($account->getAccessToken());
             }
         }
+        return false;
     }
 
     public function getAccount()
@@ -98,7 +100,7 @@ class ClientUtility implements SingletonInterface
     public function getRedirectUri(Account $account)
     {
 
-        $formProtection = \TYPO3\CMS\Core\FormProtection\FormProtectionFactory::get();
+        $formProtection = FormProtectionFactory::get();
         $formToken = $formProtection->generateToken('AuthorizationRequest');
 
         return 'http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic', [

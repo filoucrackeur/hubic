@@ -15,19 +15,23 @@
  */
 namespace Filoucrackeur\Hubic\Domain\Repository;
 
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
-class AccountRepository extends  Repository  {
+class AccountRepository extends Repository
+{
 
     // Order by BE sorting
-    protected $defaultOrderings = array(
-        'sorting' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_ASCENDING
-    );
+    protected $defaultOrderings = [
+        'sorting' => QueryInterface::ORDER_ASCENDING
+    ];
 
 
-    public function initializeObject(){
-        /** @var $defaultQuerySettings \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings */
-        $defaultQuerySettings = $this->objectManager->get('TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings');
+    public function initializeObject()
+    {
+        /** @var $defaultQuerySettings Typo3QuerySettings */
+        $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
         // don't add the pid constraint
         $defaultQuerySettings->setRespectStoragePage(FALSE);
