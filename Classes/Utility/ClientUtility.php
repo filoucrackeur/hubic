@@ -20,6 +20,8 @@ use Filoucrackeur\Hubic\Service\OAuth2\Client;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\FormProtection\FormProtectionFactory;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 class ClientUtility implements SingletonInterface
 {
@@ -38,27 +40,48 @@ class ClientUtility implements SingletonInterface
 
     /**
      * @var  \TYPO3\CMS\Extbase\Object\ObjectManager
-     * @inject
      */
     protected $objectManager;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
-     * @inject
      */
     protected $persistenceManager;
 
     /**
      * @var \Filoucrackeur\Hubic\Domain\Model\Account
-     * @inject
      */
     protected $account;
+
+
+
+    /**
+     * @param ObjectManager $objectManager
+     */
+    public function injectAccount(ObjectManager $objectManager) {
+        $this->objectManager = $objectManager;
+    }
+    
+    /**
+     * @param PersistenceManager $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManager $persistenceManager) {
+        $this->persistenceManager = $persistenceManager;
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function injectAccount(Account $account) {
+        $this->account = $account;
+    }
 
     /**
      * @param Account $account
      * @return bool
      */
-    public function callHubic(Account $account) {
+    public function callHubic(Account $account) : bool
+    {
         $this->account = $account;
         $this->OAuth = new Client($this->account->getClientId(), $this->account->getClientSecret());
         $this->OAuth->setScope('usage.r,account.r,getAllLinks.r,credentials.r,sponsorCode.r,activate.w,sponsored.r,links.drw');
@@ -68,7 +91,7 @@ class ClientUtility implements SingletonInterface
             $this->OAuth->setAccessToken($this->account->getAccessToken());
         } else {
             if (isset($_GET['formToken'])) {
-                $code = str_replace('code=', '', strstr($_GET['formToken'], "code="));
+                $code = str_replace('code=', '', strstr(GeneralUtility::_GET('formToken'), "code="));
             }
             if (isset($code)) {
                 $params = array('code' => $code, 'redirect_uri' => $this->getRedirectUri($this->account));
@@ -80,7 +103,7 @@ class ClientUtility implements SingletonInterface
                         $this->persistenceManager->update($this->account);
                         $this->persistenceManager->persistAll();
                         return true;
-                    }else {
+                    } else {
                         return false;
                     }
                 } else {
@@ -97,6 +120,10 @@ class ClientUtility implements SingletonInterface
         return $response;
     }
 
+    /**
+     * @param Account $account
+     * @return string
+     */
     public function getRedirectUri(Account $account)
     {
 
@@ -114,6 +141,10 @@ class ClientUtility implements SingletonInterface
 
     }
 
+    /**
+     * @param Account $account
+     * @return string
+     */
     public function getAuthorizationRequestUrl(Account $account)
     {
         $this->callHubic($account);

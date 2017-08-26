@@ -138,7 +138,7 @@ class Client
         $this->client_secret = $client_secret;
         $this->client_auth   = $client_auth;
         $this->certificate_file = $certificate_file;
-        if (!empty($this->certificate_file) && !is_file($this->certificate_file)) {
+        if (null !== $this->certificate_file && !is_file($this->certificate_file)) {
             throw new InvalidArgumentException('The certificate file was not found', InvalidArgumentException::CERTIFICATE_NOT_FOUND);
         }
     }
