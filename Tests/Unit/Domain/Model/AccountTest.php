@@ -24,7 +24,7 @@ class AccountTest extends AbstractUnitTest
     /**
      * @var Account
      */
-    protected $account = NULL;
+    protected $account = null;
 
     public function setUp()
     {
@@ -39,7 +39,8 @@ class AccountTest extends AbstractUnitTest
     /**
      * @test
      */
-    public function setNameForStringSetsName() {
+    public function setNameForStringSetsName()
+    {
         $this->account->setName('Account test');
 
         $this->assertAttributeEquals(

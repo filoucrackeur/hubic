@@ -70,6 +70,7 @@ Add an app with your domain where your TYPO3 is installed. You must give a name 
 ![](Documentation/Images/FrontendPluginPreview.png)
 
 ### References
+----------------------------
 
 * [hubiC API](http://api.hubic.com)
 * [hubiC docs extension TYPO3](https://typo3.org/extensions/repository/view/hubic)

@@ -1,6 +1,6 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
     'title' => 'hubiC',
     'description' => 'Cloud system synchronization with hubiC.com',
     'category' => 'fe',
@@ -22,14 +22,14 @@ $EM_CONF[$_EXTKEY] = array(
     'author_company' => 'Web Station Service',
     'CGLcompliance' => '',
     'CGLcompliance_note' => '',
-    'version' => '1.0.2',
+    'version' => '2.0.0',
     '_md5_values_when_last_written' => '',
-    'constraints' => array(
-        'depends' => array(
-            'php'   => '5.6-7.1.99',
-            'typo3' => '7.6.0-8.9.99',
-        ),
-        'conflicts' => array(),
-        'suggests' => array(),
-    ),
-);
+    'constraints' => [
+        'depends' => [
+            'php' => '7.0.99-7.2.999',
+            'typo3' => '8.1.99-9.9.99',
+        ],
+        'conflicts' => [],
+        'suggests' => [],
+    ],
+];

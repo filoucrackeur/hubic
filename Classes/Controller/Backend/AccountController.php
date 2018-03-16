@@ -17,14 +17,13 @@ namespace Filoucrackeur\Hubic\Controller\Backend;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use Filoucrackeur\Hubic\Domain\Repository\AccountRepository;
-use Filoucrackeur\Hubic\Service\OAuth2\Client;
+use Filoucrackeur\Hubic\Service\HubicService;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Class AccountController
- * @package Filoucrackeur\Hubic\Controller\Backend
  */
 class AccountController extends ActionController
 {
@@ -39,35 +38,11 @@ class AccountController extends ActionController
     protected $persistenceManager;
 
     /**
-     * @var \Filoucrackeur\Hubic\Utility\ClientUtility
+     * @var \Filoucrackeur\Hubic\Service\HubicService
      */
-    protected $client;
+    protected $hubicService;
 
-    /**
-     * @param AccountRepository $accountRepository
-     */
-    public function injectAccountRepository(AccountRepository $accountRepository) : void
-    {
-        $this->accountRepository = $accountRepository;
-    }
-
-    /**
-     * @param PersistenceManager $persistenceManager
-     */
-    public function injectPersistenceManager(PersistenceManager $persistenceManager) : void
-    {
-        $this->persistenceManager = $persistenceManager;
-    }
-
-    /**
-     * @param Client $client
-     */
-    public function injectClient(Client $client) : void
-    {
-        $this->client = $client;
-    }
-
-    public function indexAction() : void
+    public function indexAction(): void
     {
         $accounts = $this->accountRepository->findAll();
         $this->view->assign('accounts', $accounts);
@@ -76,62 +51,59 @@ class AccountController extends ActionController
     /**
      * @param Account $account
      */
-    public function showAction(Account $account) : void
+    public function showAction(Account $account): void
     {
         if ($account->getAccessToken()) {
-            $this->client->callHubic($account);
-            $clientAccount = $this->client->getAccount();
-            $clientAccountQuota = $this->client->getAccountQuota();
-            $agreement = $this->client->getAgreement();
-            $links = $this->client->getAllLinks();
+            $this->hubicService->setAccount($account);
+            $clientAccountQuota = $this->hubicService->getAccountQuota();
+            $clientAccount = $this->hubicService->getAccount();
+            $agreement = $this->hubicService->getAgreement();
+            $links = $this->hubicService->getAllLinks();
             $this->view->assignMultiple([
-                'account' => $account,
                 'clientAccount' => $clientAccount,
                 'clientAccountQuota' => $clientAccountQuota,
                 'agreement' => $agreement,
                 'links' => $links
             ]);
-        } else {
-            $this->view->assign('account', $account);
         }
+
+        $this->view->assign('account', $account);
     }
 
     /**
      * @param Account $account
      */
-    public function authenticationRequestAction(Account $account) : void
+    public function refreshTokenAction(Account $account): void
     {
-
-        $account->setAccessToken('');
-        $this->persistenceManager->update($account);
-        $this->persistenceManager->persistAll();
-
-        $this->client->setAccount($account);
-        $this->redirectToUri($this->client->getAuthorizationRequestUrl($account));
+        $this->hubicService->refreshToken($account);
+        $this->redirect('show', '', '', ['account' => $account]);
     }
 
     /**
      * @param Account $account
      */
-    public function authenticationResponseAction(Account $account) : void
+    public function accessTokenAction(Account $account): void
     {
-        if( $this->client->callHubic($account) ){
+        $this->hubicService->redirectUrlRequestToken($account);
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function callbackAction(Account $account): void
+    {
+        if ($this->hubicService->accessToken($account)) {
             $this->addFlashMessage('Token successfully added', 'Authentication request', AbstractMessage::OK);
-        }else {
+        } else {
             $this->addFlashMessage('Failed getting token please check client ID and client secret', 'Authentication request', AbstractMessage::ERROR);
         }
         $this->redirect('show', '', '', ['account' => $account]);
     }
 
-    public function addAction() {
-
-    }
-
-
     /**
      * @param Account $account
      */
-    public function deleteAction(Account $account) : void
+    public function deleteAction(Account $account): void
     {
         $this->persistenceManager->remove($account);
         $this->addFlashMessage('Account successfully deleted', 'Account', AbstractMessage::OK);
@@ -141,12 +113,37 @@ class AccountController extends ActionController
     /**
      * @param Account $account
      */
-    public function unlinkAction(Account $account) : void
+    public function unlinkAction(Account $account): void
     {
         $account->setAccessToken('');
+        $account->setRefreshToken('');
         $this->persistenceManager->update($account);
         $this->persistenceManager->persistAll();
         $this->addFlashMessage('Account successfully unlinked', 'Account', AbstractMessage::OK);
         $this->redirect('show', '', '', ['account' => $account]);
+    }
+
+    /**
+     * @param AccountRepository $accountRepository
+     */
+    public function injectAccountRepository(AccountRepository $accountRepository): void
+    {
+        $this->accountRepository = $accountRepository;
+    }
+
+    /**
+     * @param PersistenceManager $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManager $persistenceManager): void
+    {
+        $this->persistenceManager = $persistenceManager;
+    }
+
+    /**
+     * @param HubicService $hubicService
+     */
+    public function injectHubicService(HubicService $hubicService): void
+    {
+        $this->hubicService = $hubicService;
     }
 }

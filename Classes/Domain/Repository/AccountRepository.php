@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Filoucrackeur\Hubic\Domain\Repository;
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
@@ -21,12 +22,10 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class AccountRepository extends Repository
 {
-
     // Order by BE sorting
     protected $defaultOrderings = [
-        'sorting' => QueryInterface::ORDER_ASCENDING
+        'sorting' => QueryInterface::ORDER_ASCENDING,
     ];
-
 
     public function initializeObject()
     {
@@ -34,11 +33,9 @@ class AccountRepository extends Repository
         $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
         // don't add the pid constraint
-        $defaultQuerySettings->setRespectStoragePage(FALSE);
-        // don't add fields from enablecolumns constraint
-        $defaultQuerySettings->setEnableFieldsToBeIgnored(TRUE);
+        $defaultQuerySettings->setRespectStoragePage(false);
         // don't add sys_language_uid constraint
-        $defaultQuerySettings->setRespectSysLanguage(TRUE);
+        $defaultQuerySettings->setRespectSysLanguage(true);
         $this->setDefaultQuerySettings($defaultQuerySettings);
     }
 }

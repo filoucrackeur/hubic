@@ -1,18 +1,13 @@
 language: php
 
 matrix:
-  fast_finish: true
   include:
-    - php: 5.6
-      env: TYPO3_VERSION=^7.6
-    - php: 7.0
-      env: TYPO3_VERSION=^7.6
-    - php: 7.0
-      env: TYPO3_VERSION=^8
-    - php: 7.1
-      env: TYPO3_VERSION=^7.6
-    - php: 7.1
-      env: TYPO3_VERSION=^8
+  - env: TYPO3_VERSION=^8.1 COVERAGE=1
+    php: 7.0
+  - env: TYPO3_VERSION=^8.1 COVERAGE=1
+    php: 7.1
+  - env: TYPO3_VERSION=^8.1 COVERAGE=1
+    php: 7.2
 
 
 sudo: false
@@ -31,26 +26,27 @@ before_install:
   - composer --version
 
 before_script:
-  - composer require typo3/cms=$TYPO3_VERSION
-  # Restore composer.json
+  - composer require typo3/minimal=$TYPO3_VERSION
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
+  - mkdir -p build/logs
 
 script:
   - >
-    echo;
-    echo "Running unit tests";
-    .Build/bin/phpunit --colors  -c .Build/vendor/typo3/cms/typo3/sysext/core/Build/UnitTests.xml Tests/Unit/
-
+    if [[ "$COVERAGE" == "0" ]]; then
+      echo;
+      echo "Running unit tests";
+      .Build/bin/phpunit --configuration phpunit.xml.dist --colors Tests/Unit/
+    fi
   - >
-    echo;
-    echo "Running php lint";
-    find . -name \*.php ! -path "./.Build/*" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \;
+    if [[ "$COVERAGE" == "1" ]]; then
+      echo;
+      echo "Running unit tests with coverage";
+      .Build/bin/phpunit --configuration phpunit.xml.dist --colors --coverage-text --coverage-clover build/logs/clover.xml Tests/Unit/
+    fi
 
+after_script:
   - >
-    echo;
-    export typo3DatabaseName="typo3";
-    export typo3DatabaseHost="localhost";
-    export typo3DatabaseUsername="root";
-    export typo3DatabasePassword="";
-#    find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo "Running functional test suite {}"; .Build/bin/phpunit --colors  -c .Build/vendor/typo3/cms/typo3/sysext/core/Build/FunctionalTests.xml {}'
+    if [[ "$COVERAGE" == "1" ]]; then
+      travis_retry php .Build/bin/coveralls -v
+    fi

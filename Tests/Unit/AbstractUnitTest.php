@@ -1,13 +1,11 @@
 <?php
 namespace Filoucrackeur\Hubic\Tests\Unit;
 
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class AbstractUnitTest extends UnitTestCase
+abstract class AbstractUnitTest extends TestCase
 {
     protected function setUp()
     {
-
     }
-
 }

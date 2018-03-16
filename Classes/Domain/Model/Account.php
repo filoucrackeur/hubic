@@ -13,12 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Filoucrackeur\Hubic\Domain\Model;
 
-use TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
-class Account extends AbstractDomainObject  {
-
+class Account extends AbstractEntity
+{
     /**
      * @var string
      */
@@ -40,9 +41,19 @@ class Account extends AbstractDomainObject  {
     protected $accessToken;
 
     /**
+     * @var string
+     */
+    protected $refreshToken;
+
+    /**
+     * @var string
+     */
+    protected $scope;
+
+    /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -50,7 +61,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -58,7 +69,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
@@ -66,7 +77,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $clientId
      */
-    public function setClientId($clientId)
+    public function setClientId(string $clientId)
     {
         $this->clientId = $clientId;
     }
@@ -74,7 +85,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }
@@ -82,7 +93,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $clientSecret
      */
-    public function setClientSecret($clientSecret)
+    public function setClientSecret(string $clientSecret)
     {
         $this->clientSecret = $clientSecret;
     }
@@ -90,7 +101,7 @@ class Account extends AbstractDomainObject  {
     /**
      * @return string
      */
-    public function getAccessToken()
+    public function getAccessToken(): string
     {
         return $this->accessToken;
     }
@@ -98,8 +109,40 @@ class Account extends AbstractDomainObject  {
     /**
      * @param string $accessToken
      */
-    public function setAccessToken($accessToken)
+    public function setAccessToken(string $accessToken)
     {
         $this->accessToken = $accessToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRefreshToken(): string
+    {
+        return $this->refreshToken;
+    }
+
+    /**
+     * @param string $refreshToken
+     */
+    public function setRefreshToken(string $refreshToken): void
+    {
+        $this->refreshToken = $refreshToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScope(): string
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string $scope
+     */
+    public function setScope(string $scope)
+    {
+        $this->scope = $scope;
     }
 }

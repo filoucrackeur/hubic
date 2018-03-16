@@ -1,26 +1,47 @@
 <?php
+
 namespace Filoucrackeur\Hubic\Controller;
 
+use Filoucrackeur\Hubic\Domain\Model\Account;
+use Filoucrackeur\Hubic\Domain\Repository\AccountRepository;
+use Filoucrackeur\Hubic\Service\HubicService;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
-class HubicController extends ActionController {
-
+class HubicController extends ActionController
+{
     /**
-     * @var \Filoucrackeur\Hubic\Utility\ClientUtility
-     * @inject
+     * @var \Filoucrackeur\Hubic\Service\HubicService
      */
-    protected $client;
+    protected $hubicService;
 
     /**
      * @var \Filoucrackeur\Hubic\Domain\Repository\AccountRepository
-     * @inject
      */
     protected $accountRepository;
 
-    public function listAction() {
+    public function listAction()
+    {
+        /** @var Account $account */
         $account = $this->accountRepository->findByIdentifier($this->settings['account']);
-        $this->client->callHubic($account);
-        $this->view->assign('links', $this->client->getAllLinks());
+        if ($account) {
+            $this->hubicService->setAccount($account);
+            $this->view->assign('links', $this->hubicService->getAllLinks());
+        }
     }
 
+    /**
+     * @param AccountRepository $accountRepository
+     */
+    public function injectAccountRepository(AccountRepository $accountRepository)
+    {
+        $this->accountRepository = $accountRepository;
+    }
+
+    /**
+     * @param HubicService $hubicService
+     */
+    public function injectHubicService(HubicService $hubicService)
+    {
+        $this->hubicService = $hubicService;
+    }
 }

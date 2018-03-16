@@ -66,6 +66,9 @@
 			<trans-unit id="account.access_token">
 				<source>Access Token</source>
 			</trans-unit>
+			<trans-unit id="account.refresh_token">
+				<source>Refresh Token</source>
+			</trans-unit>
 			<trans-unit id="account.information">
 				<source>Account informations</source>
 			</trans-unit>

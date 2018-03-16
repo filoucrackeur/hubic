@@ -12,8 +12,8 @@
 				var canvas = document.getElementById('camembert');
 				var context = canvas.getContext('2d');
 
-				var quotaTotal = {clientAccountQuota.result.quota};
-				var quotaUsed = {clientAccountQuota.result.used};
+				var quotaTotal = {clientAccountQuota.quota};
+				var quotaUsed = {clientAccountQuota.used};
 				var percentQuotaUsed = (100/quotaTotal)*quotaUsed;
 
 				// donnees en pourcentage
@@ -90,7 +90,7 @@
 			}
 		</style>
 
-		<h1><f:image src="typo3conf/ext/hubic/Resources/Public/Images/hubic-logo.png"/>
+		<h1><f:image src="EXT:hubic/Resources/Public/Images/hubic-logo.png"/>
 			<small>{account.name}</small>
 		</h1>
 
@@ -111,6 +111,10 @@
 								<th><f:translate key="account.access_token"/></th>
 								<td>{account.accessToken}</td>
 							</tr>
+							<tr>
+								<th><f:translate key="account.refresh_token"/></th>
+								<td>{account.refreshToken}</td>
+							</tr>
 						</tbody>
 					</table>
 					<table id="hubic-data-account">
@@ -119,30 +123,30 @@
 								<th>
 									<f:translate key="account.firstname_lastname"/>
 								</th>
-								<td>{clientAccount.result.firstname} {clientAccount.result.lastname}</td>
+								<td>{clientAccount.firstname} {clientAccount.lastname}</td>
 							</tr>
 							<tr>
 								<th>
 									<f:translate key="account.email"/>
 								</th>
-								<td>{clientAccount.result.email}</td>
+								<td>{clientAccount.email}</td>
 							</tr>
 							<tr>
 								<th>
 									<f:translate key="account.offer_name"/>
 								</th>
-								<td>{clientAccount.result.offer}</td>
+								<td>{clientAccount.offer}</td>
 							</tr>
 							<tr>
 								<th>
 									<f:translate key="account.quota.total"/>
 								</th>
-								<td>{clientAccountQuota.result.quota -> f:format.bytes()}</td>
+								<td>{clientAccountQuota.quota -> f:format.bytes()}</td>
 							</tr>
 						</tbody>
 					</table>
 					<p>
-						<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">Refresh
+						<f:link.action action="refreshToken" arguments="{account: account}" class="btn btn-primary">Refresh
 							Token
 						</f:link.action>
 						<f:link.action action="unlink" arguments="{account: account}" class="btn btn-danger">unlink account
@@ -150,7 +154,7 @@
 					</p>
 				</f:then>
 				<f:else>
-					<f:link.action action="authenticationRequest" arguments="{account: account}" class="btn btn-primary">
+					<f:link.action action="autorize" arguments="{account: account}" class="btn btn-primary">
 						<f:translate key="account.btn.get_autorization"/>
 					</f:link.action>
 				</f:else>
@@ -161,7 +165,7 @@
 		<f:if condition="{account.accessToken}">
 			<canvas id="camembert" width="600" height="450"></canvas>
 
-			<f:if condition="{links.result}">
+			<f:if condition="{links}">
 				<table class="table table-striped table-hover">
 					<thead>
 					<tr>
@@ -170,7 +174,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<f:for each="{links.result}" as="link">
+					<f:for each="{links}" as="link">
 						<tr>
 							<td class="nowrap">
 								<f:if condition="{link.type} == 'dir'">
