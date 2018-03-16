@@ -1,33 +1,47 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
-			xmlns:f="http://xsd.helmut-hummel.de/ns/TYPO3/CMS/Fluid/ViewHelpers">
-<f:be.container>
-	<div class="typo3-fullDoc">
-		<div id="typo3-docheader">
-			<div id="typo3-docheader-row1">
-				<div class="buttonsleft">
-					<f:render section="iconButtons" />
+<html xmlns:f="http://xsd.helmut-hummel.de/ns/TYPO3/CMS/Fluid/ViewHelpers"
+			xmlns="http://www.w3.org/1999/xhtml">
+
+<f:render section="Assets"/>
+
+
+<div class="module">
+
+	<f:be.container includeCssFiles="{0: '{f:uri.resource(path:\'Css/HubiC.css\')}'}"
+									includeJsFiles="{0: '{f:uri.resource(path:\'JavaScript/HubiC.js\')}'}"
+									loadExtJs="true"
+									loadExtJsTheme="true"
+									loadJQuery="true"
+									pageTitle="hubiC">
+
+		<div class="module-loading-indicator"></div>
+		<div class="module-docheader">
+
+			<div class="module-docheader-bar">
+
+				<div class="module-docheader-bar-column-left">
+						<f:image src="EXT:hubic/Resources/Public/Images/hubic-logo.png" width="100"/>
 				</div>
-				<div class="buttonsright">
+				<div class="module-docheader-bar-column-right">
+
 				</div>
 			</div>
-			<div id="typo3-docheader-row2">
-				<div class="docheader-row2-left">
-					<f:be.buttons.csh />
-					<f:be.menus.actionMenu>
-						<f:be.menus.actionMenuItem label="{f:translate(key:'docheader.account.index')}" controller="Backend\Account" action="index" />
-					</f:be.menus.actionMenu>
-				</div>
-				<div class="docheader-row2-right">
-				</div>
-			</div>
+
 		</div>
 		<div id="typo3-docbody">
 			<div id="typo3-inner-docbody">
-				<f:flashMessages />
-				<f:render section="main" />
+
+				<f:if condition="{account}">
+				<div class="page-header">
+					<h1><f:translate key="account"/> <small>{account.name}</small></h1>
+				</div>
+				</f:if>
+
+				<f:flashMessages/>
+				<f:render section="main"/>
 			</div>
 		</div>
-	</div>
+</div>
 </f:be.container>
+
+</div>
 </html>

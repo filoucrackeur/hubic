@@ -1,0 +1,42 @@
+<html xmlns:f="https://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" xmlns="http://www.w3.org/1999/xhtml"
+			data-namespace-typo3-fluid="true">
+
+<h3 class="dropdown-headline">
+	<f:render section="BodyTitle"/>
+</h3>
+
+<hr/>
+<div class="dropdown-table">
+	<f:if condition="{accounts}">
+		<f:then>
+			<f:for each="{accounts}" as="account">
+				<div class="dropdown-table-row">
+					<div class="dropdown-table-column dropdown-table-column-top dropdown-table-name">
+						{account.name}
+					</div>
+					<div class="dropdown-table-column dropdown-table-column-top dropdown-table-expiration-date">
+						<f:if condition="{account.expired}">
+							<f:then>
+								<div class="text-danger text-right">Expired</div>
+							</f:then>
+							<f:else>
+								<div class="text-success text-right">
+									{account.expirationDate -> f:format.date(format: 'd/m/Y h:i:s')}
+								</div>
+							</f:else>
+						</f:if>
+					</div>
+				</div>
+			</f:for>
+		</f:then>
+		<f:else>
+			<div class="dropdown-table-row">
+				<div class="dropdown-table-column dropdown-table-column-top dropdown-table-account">
+					<f:translate key="no_account" extensionName="hubic"/>
+				</div>
+			</div>
+		</f:else>
+	</f:if>
+</div>
+
+</html>

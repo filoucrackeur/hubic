@@ -13,6 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Filoucrackeur\Hubic\Controller\Backend;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
@@ -21,6 +22,7 @@ use Filoucrackeur\Hubic\Service\HubicService;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class AccountController
@@ -76,7 +78,8 @@ class AccountController extends ActionController
     public function refreshTokenAction(Account $account): void
     {
         $this->hubicService->refreshToken($account);
-        $this->redirect('show', '', '', ['account' => $account]);
+
+        $this->forward('show', null, null, ['account' => $account]);
     }
 
     /**
@@ -93,11 +96,15 @@ class AccountController extends ActionController
     public function callbackAction(Account $account): void
     {
         if ($this->hubicService->accessToken($account)) {
-            $this->addFlashMessage('Token successfully added', 'Authentication request', AbstractMessage::OK);
+            $this->addFlashMessage(LocalizationUtility::translate('flashmessage.token_added', 'hubic'),
+                LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
+                AbstractMessage::OK);
         } else {
-            $this->addFlashMessage('Failed getting token please check client ID and client secret', 'Authentication request', AbstractMessage::ERROR);
+            $this->addFlashMessage(LocalizationUtility::translate('flashmessage.missing_client_data', 'hubic'),
+                LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
+                AbstractMessage::ERROR);
         }
-        $this->redirect('show', '', '', ['account' => $account]);
+        $this->forward('show', null, null, ['account' => $account]);
     }
 
     /**
@@ -106,8 +113,10 @@ class AccountController extends ActionController
     public function deleteAction(Account $account): void
     {
         $this->persistenceManager->remove($account);
-        $this->addFlashMessage('Account successfully deleted', 'Account', AbstractMessage::OK);
-        $this->redirect('index');
+        $this->addFlashMessage(LocalizationUtility::translate('flashmessage.account_deleted', 'hubic'),
+            LocalizationUtility::translate('account'),
+            AbstractMessage::OK);
+        $this->forward('index');
     }
 
     /**
@@ -119,8 +128,10 @@ class AccountController extends ActionController
         $account->setRefreshToken('');
         $this->persistenceManager->update($account);
         $this->persistenceManager->persistAll();
-        $this->addFlashMessage('Account successfully unlinked', 'Account', AbstractMessage::OK);
-        $this->redirect('show', '', '', ['account' => $account]);
+        $this->addFlashMessage(LocalizationUtility::translate('flashmessage.account_unlinked', 'hubic'),
+            LocalizationUtility::translate('account', 'hubic'),
+            AbstractMessage::OK);
+        $this->forward('show', null, null, ['account' => $account]);
     }
 
     /**

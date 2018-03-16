@@ -19,22 +19,22 @@ namespace Filoucrackeur\Hubic\Service;
 use Filoucrackeur\Hubic\Domain\Model\Account;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\FormProtection\FormProtectionFactory;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 class HubicService implements SingletonInterface
 {
-    public const AUTHORIZATION_ENDPOINT = 'https://api.hubic.com/oauth/auth/';
+    const AUTHORIZATION_ENDPOINT = 'https://api.hubic.com/oauth/auth/';
 
-    public const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
+    const TOKEN_ENDPOINT = 'https://api.hubic.com/oauth/token/';
 
-    public const DOMAIN_API = 'https://api.hubic.com/';
+    const DOMAIN_API = 'https://api.hubic.com/';
 
-    public const VERSION_API = '1.0';
+    const VERSION_API = '1.0';
 
     /**
      * @var RequestFactory
@@ -53,14 +53,6 @@ class HubicService implements SingletonInterface
 
     /**
      * @param Account $account
-     */
-    public function setAccount(Account $account)
-    {
-        $this->account = $account;
-    }
-
-    /**
-     * @param Account $account
      *
      * @return bool
      * @throws \RuntimeException
@@ -75,7 +67,7 @@ class HubicService implements SingletonInterface
             ],
             RequestOptions::FORM_PARAMS => [
                 'code' => GeneralUtility::_GET('code'),
-                'redirect_uri' => 'http://localhost/',
+                'redirect_uri' => $this->getHost() . '/',
                 'grant_type' => 'authorization_code',
             ],
             RequestOptions::VERSION => '1.1',
@@ -95,64 +87,11 @@ class HubicService implements SingletonInterface
     }
 
     /**
-     * @param Account $account
+     * @return string
      */
-    public function refreshToken(Account $account)
+    public function getHost(): string
     {
-
-        $credentials = base64_encode($account->getClientId() . ':' . $account->getClientSecret());
-        $additionalOptions = [
-            'headers' => [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Authorization' => 'Basic ' . $credentials,
-            ],
-            RequestOptions::FORM_PARAMS => [
-                'refresh_token' => $account->getRefreshToken(),
-                'grant_type' => 'refresh_token',
-            ],
-            RequestOptions::VERSION => '1.1',
-        ];
-
-        $response = $this->requestFactory->request(self::TOKEN_ENDPOINT, 'POST', $additionalOptions);
-
-        if (200 === $response->getStatusCode()) {
-            $content = json_decode($response->getBody()->getContents());
-            $account->setAccessToken($content->access_token);
-            $this->persistenceManager->update($account);
-            $this->persistenceManager->persistAll();
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $path
-     * @param string $method
-     *
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function fetch(string $path, $method = 'GET')
-    {
-
-        $additionalOptions = [
-            'headers' => [
-                'Content-Type' => 'application/x-www-form-urlencoded',
-                'Authorization' => 'Bearer ' . $this->account->getAccessToken(),
-            ],
-            RequestOptions::VERSION => '1.1',
-        ];
-
-        try {
-            $response = $this->requestFactory->request(self::DOMAIN_API . self::VERSION_API . $path, $method, $additionalOptions);
-
-            if (200 === $response->getStatusCode()) {
-                return json_decode($response->getBody()->getContents());
-            }
-        } catch (\Exception $e) {
-            if ($this->refreshToken($this->account)) {
-                return $this->fetch($path, $method);
-            }
-        }
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
     }
 
     /**
@@ -178,24 +117,100 @@ class HubicService implements SingletonInterface
      *
      * @return string
      */
-    private function getRedirectUri(Account $account)
+    private function getRedirectUri(Account $account): string
     {
         $formProtection = FormProtectionFactory::get();
         $formToken = $formProtection->generateToken('AuthorizationRequest');
 
-        return urlencode('http://' . $_SERVER['HTTP_HOST'] . BackendUtility::getModuleUrl('tools_HubicHubic', [
-                'tx_hubic_tools_hubichubic' => [
-                    'action' => 'callback',
-                    'controller' => 'Backend\Account',
-                    'account' => $account->getUid(),
-                ],
-                'formToken' => $formToken,
-            ]));
+        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+
+        return urlencode($this->getHost() . $uriBuilder
+                ->setCreateAbsoluteUri(true)
+                ->setArguments([
+                    'tx_hubic_tools_hubichubic' => [
+                        'action' => 'callback',
+                        'controller' => 'Backend\Account',
+                        'account' => $account->getUid(),
+                    ],
+                    'formToken' => $formToken
+                ])->buildBackendUri());
     }
 
     public function getAccount()
     {
         return $this->fetch('/account');
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function setAccount(Account $account)
+    {
+        $this->account = $account;
+    }
+
+    /**
+     * @param string $path
+     * @param string $method
+     *
+     * @return \Psr\Http\Message\ResponseInterface|string
+     */
+    public function fetch(string $path, $method = 'GET')
+    {
+
+        $additionalOptions = [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Authorization' => 'Bearer ' . $this->account->getAccessToken(),
+            ],
+            RequestOptions::VERSION => '1.1',
+        ];
+
+        try {
+            $response = $this->requestFactory->request(self::DOMAIN_API . self::VERSION_API . $path, $method,
+                $additionalOptions);
+
+            if (200 === $response->getStatusCode()) {
+                return json_decode($response->getBody()->getContents());
+            }
+        } catch (\Exception $e) {
+            if ($this->refreshToken($this->account)) {
+                return $this->fetch($path, $method);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param Account $account
+     * @return bool
+     */
+    public function refreshToken(Account $account): bool
+    {
+
+        $credentials = base64_encode($account->getClientId() . ':' . $account->getClientSecret());
+        $additionalOptions = [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+                'Authorization' => 'Basic ' . $credentials,
+            ],
+            RequestOptions::FORM_PARAMS => [
+                'refresh_token' => $account->getRefreshToken(),
+                'grant_type' => 'refresh_token',
+            ],
+            RequestOptions::VERSION => '1.1',
+        ];
+
+        $response = $this->requestFactory->request(self::TOKEN_ENDPOINT, 'POST', $additionalOptions);
+
+        if (200 === $response->getStatusCode()) {
+            $content = json_decode($response->getBody()->getContents());
+            $account->setAccessToken($content->access_token);
+            $this->persistenceManager->update($account);
+            $this->persistenceManager->persistAll();
+        }
+
+        return true;
     }
 
     /**
@@ -237,7 +252,7 @@ class HubicService implements SingletonInterface
     /**
      * @param RequestFactory $requestFactory
      */
-    public function injectRequestFactory(RequestFactory $requestFactory)
+    public function injectRequestFactory(RequestFactory $requestFactory): void
     {
         $this->requestFactory = $requestFactory;
     }

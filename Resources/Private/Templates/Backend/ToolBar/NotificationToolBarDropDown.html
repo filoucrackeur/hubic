@@ -1,0 +1,50 @@
+<html xmlns:f="https://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers"
+			xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+			data-namespace-typo3-fluid="true">
+
+<f:layout name="Backend/ToolBar/DropDown/Default" />
+
+********************************************************************************
+*** BODY
+********************************************************************************
+<f:section name="BodyTitle">
+	<f:image src="EXT:hubic/Resources/Public/Images/hubic-logo.png" width="100"/>
+</f:section>
+
+<f:section name="BodyDefinitionLink">
+ff
+</f:section>
+
+<f:section name="BodyDescriptionNoNotification">
+dd
+</f:section>
+
+<f:section name="BodyDescriptionNotification">
+tt
+</f:section>
+
+<f:section name="BodyNotificationIcon">
+	<core:icon identifier="{notification.iconIdentifier}" alternativeMarkupIdentifier="inline" />
+</f:section>
+
+<f:section name="BodyNotificationIdentifier">
+	{notification.label}
+</f:section>
+
+<f:section name="BodyNotificationLabel">
+	<f:translate key="LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:hubic" extensionName="hubic"/>
+</f:section>
+
+********************************************************************************
+*** ERRORS
+********************************************************************************
+
+<f:section name="BodyErrorsDescription">
+yy
+</f:section>
+
+<f:section name="BodyErrorsLink">
+uu
+</f:section>
+
+</html>
