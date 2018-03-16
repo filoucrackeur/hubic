@@ -1,6 +1,6 @@
 # ![hubiC](Resources/Public/Images/hubic-logo.png) shared links for TYPO3
 
-[![Build Status](https://travis-ci.org/filoucrackeur/hubic.svg?branch=master)](https://travis-ci.org/filoucrackeur/hubic) 
+[![Build Status](https://travis-ci.org/filoucrackeur/hubic.svg?branch=mastvimer)](https://travis-ci.org/filoucrackeur/hubic) 
 [![Code Coverage](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/?branch=master) 
 [![Build Status](https://scrutinizer-ci.com/g/filoucrackeur/hubic/badges/build.png?b=master)](https://scrutinizer-ci.com/g/filoucrackeur/hubic/build-status/master)
@@ -70,7 +70,7 @@ Add an app with your domain where your TYPO3 is installed. You must give a name 
 ![](Documentation/Images/FrontendPluginPreview.png)
 
 ### References
-----------------------------
+------------------------------
 
 * [hubiC API](http://api.hubic.com)
 * [hubiC docs extension TYPO3](https://typo3.org/extensions/repository/view/hubic)
