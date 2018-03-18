@@ -309,7 +309,7 @@ class HubicService implements SingletonInterface
     /**
      * @param RequestFactory $requestFactory
      */
-    public function injectRequestFactory(RequestFactory $requestFactory): void
+    public function injectRequestFactory(RequestFactory $requestFactory)
     {
         $this->requestFactory = $requestFactory;
     }
@@ -317,7 +317,7 @@ class HubicService implements SingletonInterface
     /**
      * @param PersistenceManager $persistenceManager
      */
-    public function injectPersistenceManager(PersistenceManager $persistenceManager): void
+    public function injectPersistenceManager(PersistenceManager $persistenceManager)
     {
         $this->persistenceManager = $persistenceManager;
     }
@@ -325,7 +325,7 @@ class HubicService implements SingletonInterface
     /**
      * @param AccountRepository $accountRepository
      */
-    public function injectAccountRepository(AccountRepository $accountRepository): void
+    public function injectAccountRepository(AccountRepository $accountRepository)
     {
         $this->accountRepository = $accountRepository;
     }
