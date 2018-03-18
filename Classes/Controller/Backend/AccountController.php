@@ -76,6 +76,7 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
@@ -109,6 +110,7 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function unlinkAction(Account $account): void

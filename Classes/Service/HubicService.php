@@ -299,7 +299,10 @@ class HubicService implements SingletonInterface
      */
     public function deleteLink(string $uri)
     {
-        $arguments['uri'] = $uri;
+        $arguments = [
+            'uri' => $uri
+        ];
+
         return $this->fetch('/account/link', 'DELETE', $arguments);
     }
 
