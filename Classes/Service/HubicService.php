@@ -228,7 +228,7 @@ class HubicService implements SingletonInterface
     /**
      * @param Account $account
      */
-    public function delete(Account $account): void
+    public function delete(Account $account)
     {
         $this->persistenceManager->remove($account);
         $this->persistenceManager->persistAll();
@@ -237,7 +237,7 @@ class HubicService implements SingletonInterface
     /**
      * @param Account $account
      */
-    public function unlink(Account $account): void
+    public function unlink(Account $account)
     {
         $account->setAccessToken('');
         $account->setRefreshToken('');
