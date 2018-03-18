@@ -38,6 +38,7 @@
 	},
 	"autoload": {
 		"psr-4": {
+			"Filoucrackeur\\": "Build/",
 			"Filoucrackeur\\Hubic\\": "Classes/"
 		}
 	},
@@ -57,11 +58,17 @@
 		"post-autoload-dump": [
 			"mkdir -p .Build/Web/typo3conf/ext/",
 			"[ -L .Build/Web/typo3conf/ext/hubic ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/hubic"
+		],
+		"ter": [
+			"Filoucrackeur\\Deployer::deploy"
+		],
+		"zip": [
+			"zip -r ../hubic_x.y.z.zip *"
 		]
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "1.0.x-dev"
+			"dev-master": "2.0.x-dev"
 		},
 		"typo3/cms": {
 			"cms-package-dir": "{$vendor-dir}/typo3/cms",
