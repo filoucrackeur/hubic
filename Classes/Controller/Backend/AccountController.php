@@ -138,7 +138,7 @@ class AccountController extends ActionController
     /**
      * @param HubicService $hubicService
      */
-    public function injectHubicService(HubicService $hubicService): void
+    public function injectHubicService(HubicService $hubicService)
     {
         $this->hubicService = $hubicService;
     }
