@@ -40,7 +40,7 @@ class AccountController extends ActionController
     /**
      * @param Account $account
      */
-    public function showAction(Account $account): void
+    public function showAction(Account $account)
     {
         if ($account->getAccessToken()) {
             $this->hubicService->setAccount($account);
@@ -59,7 +59,7 @@ class AccountController extends ActionController
      * @param Account $account
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function refreshTokenAction(Account $account): void
+    public function refreshTokenAction(Account $account)
     {
         $this->hubicService->refreshToken($account);
 
@@ -69,7 +69,7 @@ class AccountController extends ActionController
     /**
      * @param Account $account
      */
-    public function accessTokenAction(Account $account): void
+    public function accessTokenAction(Account $account)
     {
         $this->hubicService->redirectUrlRequestToken($account);
     }
@@ -80,7 +80,7 @@ class AccountController extends ActionController
      * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function callbackAction(Account $account): void
+    public function callbackAction(Account $account)
     {
         if ($this->hubicService->accessToken($account)) {
             $this->addFlashMessage(LocalizationUtility::translate('flashmessage.token_added', 'hubic'),
@@ -99,7 +99,7 @@ class AccountController extends ActionController
      * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function deleteAction(Account $account): void
+    public function deleteAction(Account $account)
     {
         $this->hubicService->delete($account);
         $this->addFlashMessage(LocalizationUtility::translate('flashmessage.account_deleted', 'hubic'),
@@ -113,7 +113,7 @@ class AccountController extends ActionController
      * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
-    public function unlinkAction(Account $account): void
+    public function unlinkAction(Account $account)
     {
         $this->hubicService->unlink($account);
 
