@@ -26,6 +26,7 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 
 class HubicService implements SingletonInterface
 {
@@ -160,10 +161,10 @@ class HubicService implements SingletonInterface
     /**
      * @param string $path
      * @param string $method
-     *
+     * @param array $arguments
      * @return \Psr\Http\Message\ResponseInterface|string
      */
-    public function fetch(string $path, $method = 'GET')
+    public function fetch(string $path, $method = 'GET', array $arguments = [])
     {
         $additionalOptions = [
             'headers' => [
@@ -173,6 +174,10 @@ class HubicService implements SingletonInterface
             RequestOptions::VERSION => '1.1',
         ];
 
+        if (!empty($arguments)) {
+            $additionalOptions[RequestOptions::FORM_PARAMS] = $arguments;
+        }
+
         try {
             $response = $this->requestFactory->request(self::DOMAIN_API . self::VERSION_API . $path, $method,
                 $additionalOptions);
@@ -181,8 +186,9 @@ class HubicService implements SingletonInterface
                 return json_decode($response->getBody()->getContents());
             }
         } catch (\Exception $e) {
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($method);
-            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($response);
+            if ($this->refreshToken($this->account)) {
+                return $this->fetch($path, $method);
+            }
         }
         return null;
     }
@@ -240,7 +246,7 @@ class HubicService implements SingletonInterface
     }
 
     /**
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return QueryResult|null
      */
     public function getAccounts()
     {
@@ -252,7 +258,7 @@ class HubicService implements SingletonInterface
      *
      * @see https://api.hubic.com/console/
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function getAccountQuota()
     {
@@ -264,7 +270,7 @@ class HubicService implements SingletonInterface
      *
      * @see https://api.hubic.com/console/
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function getAgreement()
     {
@@ -276,7 +282,7 @@ class HubicService implements SingletonInterface
      *
      * @see https://api.hubic.com/console/
      *
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function getAllLinks()
     {
@@ -289,11 +295,12 @@ class HubicService implements SingletonInterface
      * @see https://api.hubic.com/console/
      *
      * @param string $uri
-     * @return ResponseInterface
+     * @return ResponseInterface|null
      */
     public function deleteLink(string $uri)
     {
-        return $this->fetch('/account/link', 'DELETE');
+        $arguments['uri'] = $uri;
+        return $this->fetch('/account/link', 'DELETE', $arguments);
     }
 
     /**
@@ -315,7 +322,7 @@ class HubicService implements SingletonInterface
     /**
      * @param AccountRepository $accountRepository
      */
-    public function injectAccountRepository(AccountRepository $accountRepository)
+    public function injectAccountRepository(AccountRepository $accountRepository): void
     {
         $this->accountRepository = $accountRepository;
     }

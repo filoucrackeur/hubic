@@ -44,15 +44,11 @@ class AccountController extends ActionController
     {
         if ($account->getAccessToken()) {
             $this->hubicService->setAccount($account);
-            $clientAccountQuota = $this->hubicService->getAccountQuota();
-            $clientAccount = $this->hubicService->getAccount();
-            $agreement = $this->hubicService->getAgreement();
-            $links = $this->hubicService->getAllLinks();
             $this->view->assignMultiple([
-                'clientAccount' => $clientAccount,
-                'clientAccountQuota' => $clientAccountQuota,
-                'agreement' => $agreement,
-                'links' => $links
+                'clientAccount' => $this->hubicService->getAccount(),
+                'clientAccountQuota' => $this->hubicService->getAccountQuota(),
+                'agreement' => $this->hubicService->getAgreement(),
+                'links' => $this->hubicService->getAllLinks()
             ]);
         }
 
@@ -61,6 +57,7 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function refreshTokenAction(Account $account): void
     {
@@ -79,6 +76,7 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \InvalidArgumentException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function callbackAction(Account $account): void
@@ -97,6 +95,8 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \InvalidArgumentException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function deleteAction(Account $account): void
     {
@@ -124,6 +124,7 @@ class AccountController extends ActionController
     /**
      * @param Account $account
      * @param string $uri
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function unlinkUriAction(Account $account, string $uri)
     {
