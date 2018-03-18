@@ -131,7 +131,7 @@ class Account extends AbstractEntity
     /**
      * @param string $refreshToken
      */
-    public function setRefreshToken(string $refreshToken): void
+    public function setRefreshToken(string $refreshToken)
     {
         $this->refreshToken = $refreshToken;
     }
