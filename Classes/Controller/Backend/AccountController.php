@@ -32,7 +32,7 @@ class AccountController extends ActionController
      */
     protected $hubicService;
 
-    public function indexAction(): void
+    public function indexAction()
     {
         $this->view->assign('accounts', $this->hubicService->getAccounts());
     }
