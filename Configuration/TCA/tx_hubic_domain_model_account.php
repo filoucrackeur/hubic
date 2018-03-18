@@ -13,19 +13,26 @@ return [
             'disabled' => 'hidden'
         ],
         'rootLevel' => 1,
-        'iconfile' => 'EXT:hubic/Resources/Public/Icons/icon_tx_hubic_domain_model_account.gif'
+        'iconfile' => 'EXT:hubic/Resources/Public/Icons/icon_tx_hubic_domain_model_account.svg'
     ],
     'interface' => [
-        'showRecordFieldList' => 'name,client_id,client_secret,access_token'
+        'showRecordFieldList' => 'name,client_id,client_secret,access_token,hidden'
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token'],
-        '1' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token']
+        '0' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date,hidden'],
+        '1' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date,hidden']
     ],
     'palettes' => [],
     'columns' => [
+        'hidden' => [
+            'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
+            'config' => [
+                'type' => 'check',
+                'default' => 0
+            ]
+        ],
         'name' => [
-            'label' => 'Name',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:name',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -33,7 +40,7 @@ return [
             ]
         ],
         'client_id' => [
-            'label' => 'Client ID',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:client_id',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -41,7 +48,7 @@ return [
             ]
         ],
         'client_secret' => [
-            'label' => 'Client Secret',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:client_secret',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -49,7 +56,7 @@ return [
             ]
         ],
         'scope' => [
-            'label' => 'Scope',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:scope',
             'config' => [
                 'type' => 'input',
                 'size' => 100,
@@ -58,7 +65,7 @@ return [
             ]
         ],
         'access_token' => [
-            'label' => 'Access Token',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:access_token',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
@@ -68,13 +75,21 @@ return [
             ]
         ],
         'refresh_token' => [
-            'label' => 'Refresh Token',
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:refresh_token',
             'config' => [
                 'type' => 'input',
                 'size' => 40,
                 'readOnly' => 1,
                 'default' => '',
                 'eval' => 'trim'
+            ]
+        ],
+        'expiration_date' => [
+            'label' => 'LLL:EXT:hubic/Resources/Private/Language/locallang_db.xlf:date_expiration',
+            'config' => [
+                'type' => 'input',
+                'readOnly' => 1,
+                'eval' => 'datetime'
             ]
         ],
     ]

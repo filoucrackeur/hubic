@@ -29,11 +29,29 @@ class AccountTest extends AbstractUnitTest
     public function setUp()
     {
         $this->account = new Account();
+        $this->account->setName('myName');
+        $this->account->setClientId('myClientId');
+        $this->account->setClientSecret('myClientSecret');
+        $this->account->setAccessToken('myAccessToken');
+        $this->account->setRefreshToken('myRefreshToken');
+        $this->account->setScope('myScope');
+        $this->account->setExpirationDate(new \DateTime('now'));
     }
 
     public function tearDown()
     {
         unset($this->account);
+    }
+
+    /**
+     * @test
+     */
+    public function getNameForStringGetName()
+    {
+        $this->assertEquals(
+            'myName',
+            $this->account->getName()
+        );
     }
 
     /**
@@ -46,6 +64,131 @@ class AccountTest extends AbstractUnitTest
         $this->assertAttributeEquals(
             'Account test',
             'name',
+            $this->account
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getClientIdForStringGetClientId()
+    {
+        $this->assertEquals(
+            'myClientId',
+            $this->account->getClientId()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setClientIdStringSetsClientId()
+    {
+        $this->account->setClientId('myClientId');
+
+        $this->assertAttributeEquals(
+            'myClientId',
+            'clientId',
+            $this->account
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getClientSecretForStringGetClientSecret()
+    {
+        $this->assertEquals(
+            'myClientSecret',
+            $this->account->getClientSecret()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setClientSecretStringSetsClientSecret()
+    {
+        $this->account->setClientSecret('myClientSecret');
+
+        $this->assertAttributeEquals(
+            'myClientSecret',
+            'clientSecret',
+            $this->account
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getAccessTokenForStringGetAccessToken()
+    {
+        $this->assertEquals(
+            'myAccessToken',
+            $this->account->getAccessToken()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setAccessTokenStringSetsAccessToken()
+    {
+        $this->account->setAccessToken('myAccessToken');
+
+        $this->assertAttributeEquals(
+            'myAccessToken',
+            'accessToken',
+            $this->account
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getRefreshTokenForStringGetRefreshToken()
+    {
+        $this->assertEquals(
+            'myRefreshToken',
+            $this->account->getRefreshToken()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setRefreshTokenStringSetsRefreshToken()
+    {
+        $this->account->setRefreshToken('myRefreshToken');
+
+        $this->assertAttributeEquals(
+            'myRefreshToken',
+            'refreshToken',
+            $this->account
+        );
+    }
+    
+    /**
+     * @test
+     */
+    public function getScopeForStringGetScope()
+    {
+        $this->assertEquals(
+            'myScope',
+            $this->account->getScope()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function setScopeStringSetsScope()
+    {
+        $this->account->setScope('myScope');
+
+        $this->assertAttributeEquals(
+            'myScope',
+            'scope',
             $this->account
         );
     }

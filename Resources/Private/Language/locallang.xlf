@@ -25,7 +25,7 @@
 				<source>Account</source>
 			</trans-unit>
 			<trans-unit id="account.delete">
-				<source>Delete account</source>
+				<source>Delete</source>
 			</trans-unit>
 			<trans-unit id="account.show">
 				<source>Details</source>
@@ -42,8 +42,11 @@
 			<trans-unit id="account.link_comment">
 				<source>Comment</source>
 			</trans-unit>
-			<trans-unit id="account.firstname_lastname">
-				<source>Firstname &amp; Lastname</source>
+			<trans-unit id="account.firstname">
+				<source>Firstname</source>
+			</trans-unit>
+			<trans-unit id="account.lastname">
+				<source>Lastname</source>
 			</trans-unit>
 			<trans-unit id="account.email">
 				<source>Email</source>

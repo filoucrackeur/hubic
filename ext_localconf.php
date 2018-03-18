@@ -10,6 +10,13 @@ $boot = function ($_EXTKEY) {
         'List',
         ['Hubic' => 'list']
     );
+
+    $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
+    $iconRegistry->registerIcon(
+        'tx-hubic-icon-toolbar',
+        \TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider::class,
+        ['source' => 'EXT:hubic/Resources/Public/Icons/hubic-icon-toolbar.svg']
+    );
 };
 
 $boot($_EXTKEY);

@@ -7,6 +7,7 @@ CREATE TABLE tx_hubic_domain_model_account (
 	scope VARCHAR(100) DEFAULT '' NOT NULL,
 	access_token VARCHAR(80) DEFAULT '' NOT NULL,
 	refresh_token VARCHAR(80) DEFAULT '' NOT NULL,
+	expiration_date INT(11) DEFAULT '0' NOT NULL,
 	crdate INT(11) DEFAULT '0' NOT NULL,
 	deleted TINYINT(4) DEFAULT '0' NOT NULL,
 	hidden TINYINT(4) DEFAULT '0' NOT NULL,

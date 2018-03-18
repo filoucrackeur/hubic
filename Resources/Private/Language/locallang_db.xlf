@@ -3,8 +3,32 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2014-06-02T11:48:25Z" product-name="hubic">
 		<header/>
 		<body>
+			<trans-unit id="hubic">
+				<source>hubiC</source>
+			</trans-unit>
 			<trans-unit id="tx_hubic_domain_model_account">
-				<source>hubiC Manager</source>
+				<source>hubiC account</source>
+			</trans-unit>
+			<trans-unit id="name">
+				<source>Account name</source>
+			</trans-unit>
+			<trans-unit id="client_id">
+				<source>Client ID</source>
+			</trans-unit>
+			<trans-unit id="client_secret">
+				<source>Client Secret</source>
+			</trans-unit>
+			<trans-unit id="scope">
+				<source>Scope</source>
+			</trans-unit>
+			<trans-unit id="access_token">
+				<source>Access Token</source>
+			</trans-unit>
+			<trans-unit id="refresh_token">
+				<source>Refresh Token</source>
+			</trans-unit>
+			<trans-unit id="date_expiration">
+				<source>Expiration date</source>
 			</trans-unit>
 		</body>
 	</file>

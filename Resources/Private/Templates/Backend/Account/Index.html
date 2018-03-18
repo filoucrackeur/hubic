@@ -1,62 +1,125 @@
-<div xmlns:f="https://xsd.helhum.io/ns/typo3/cms-fluid/master/ViewHelpers" xmlns:be="http://www.w3.org/1999/html"
-		 data-namespace-typo3-fluid="true">
-	<f:layout name="module"/>
+<html xmlns:f="http://xsd.helmut-hummel.de/ns/TYPO3/CMS/Fluid/ViewHelpers"
+			xmlns="http://www.w3.org/1999/xhtml" data-namespace-typo3-fluid="true">
+<f:layout name="module"/>
 
-	<f:section name="Assets">
-	</f:section>
+<f:section name="Assets">
+</f:section>
 
-	<f:section name="iconButtons">
-	</f:section>
+<f:section name="iconButtons">
+</f:section>
 
-	<f:section name="main">
+<f:section name="main">
 
-		<f:be.infobox title="hubiC domain configuration">
-			<a href="https://hubic.com/home/browser/developers/"
-				 target="_blank">https://hubic.com/home/browser/developers/</a>
-		</f:be.infobox>
-		<table class="table table-striped table-hover">
-			<thead>
-			<tr>
-				<th>
-					<f:translate key="account.name"/>
-					<span class="badge">{accounts -> f:count()}</span>
-				</th>
-				<th>
-					<f:translate key="action"/>
-				</th>
-			</tr>
-			</thead>
-			<tbody>
-			<f:if condition="{accounts}">
-				<f:then>
-					<f:for each="{accounts}" as="account">
-						<tr>
-							<td class="nowrap">
+	<div class="row">
+
+		<div class="col-xs-12">
+
+			<f:be.infobox title="hubiC domain configuration" state="-1">
+				<a href="https://hubic.com/home/browser/developers/"
+					 target="_blank">https://hubic.com/home/browser/developers/</a><br/>
+				<a href="https://api.hubic.com/"
+					 target="_blank">https://api.hubic.com/</a>
+
+
+			</f:be.infobox>
+		</div>
+	</div>
+	<div class="row">
+		<f:if condition="{accounts}">
+			<f:then>
+				<f:for each="{accounts}" as="account">
+					<div class="col-xs-12 col-md-6">
+
+						<div class="panel panel-default">
+							<div class="panel-heading">
 								<f:link.action action="show" arguments="{account: account}">{account.name}</f:link.action>
-							</td>
-							<td>
-								<f:link.action action="show" arguments="{account: account}" class="btn btn-default">
-									<i class="fa fa-user"></i>
-									<f:translate key="account.show"/>
-								</f:link.action>
-								<f:link.action action="delete" arguments="{account: account}" class="btn btn-danger">
-									<i class="fa fa-trash"></i>
-									<f:translate key="account.delete"/>
-								</f:link.action>
-							</td>
-						</tr>
-					</f:for>
-				</f:then>
-				<f:else>
-					<tr>
-						<td colspan="2">
-							<f:translate key="no_acount"/>
-						</td>
-					</tr>
-				</f:else>
-			</f:if>
-			</tbody>
-		</table>
+								<f:if condition="{account.isExpired}">
+									<f:then>
+										<span class="label label-warning">Expired</span>
+									</f:then>
+									<f:else>
+										<span class="label label-success"></span>
+									</f:else>
+								</f:if>
+								<f:link.action action="delete" class="close" arguments="{account: account}"><span aria-hidden="true">&times;</span></f:link.action>
+							</div>
+							<div class="panel-body">
+								<div class="dropdown-table">
+									<f:if condition="{account.expirationDate}">
+										<div class="dropdown-table-row">
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-date-expiration">
+												<strong><f:translate key="account.date_expiration" extensionName="hubic"/></strong>
+											</div>
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-date-expiration">
+												<small>{account.expirationDate -> f:format.date(format: 'd/m/Y')}</small>
+											</div>
+										</div>
+									</f:if>
+									<f:if condition="{account.clientId}">
+										<div class="dropdown-table-row">
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-client-id">
+												<strong><f:translate key="account.client_id" extensionName="hubic"/></strong>
+											</div>
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-client-id">
+												<small>{account.clientId}</small>
+											</div>
+										</div>
+									</f:if>
+									<f:if condition="{account.clientSecret}">
+										<div class="dropdown-table-row">
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-client-secret">
+												<strong><f:translate key="account.client_secret" extensionName="hubic"/></strong>
+											</div>
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-client-secret">
+												<small>{account.clientSecret}</small>
+											</div>
+										</div>
+									</f:if>
+									<f:if condition="{account.accessToken}">
+										<div class="dropdown-table-row">
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-access-token">
+												<strong><f:translate key="account.access_token" extensionName="hubic"/></strong>
+											</div>
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-access-token">
+												<small>{account.accessToken}</small>
+											</div>
+										</div>
+									</f:if>
+									<f:if condition="{account.refreshToken}">
+										<div class="dropdown-table-row">
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-refresh-token">
+												<strong><f:translate key="account.refresh_token" extensionName="hubic"/></strong>
+											</div>
+											<div class="dropdown-table-column dropdown-table-column-top dropdown-table-refresh-token">
+												<small>{account.refreshToken}</small>
+											</div>
+										</div>
+									</f:if>
+								</div>
+							</div>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-xs-12 text-center">
+										<f:link.action action="show" arguments="{account: account}"
+																	 class="btn btn-default btn-fluid {f:if(condition: '!{account.refreshToken}', then: 'hide')}">
+											<i class="fa fa-cogs"></i>
+											<f:translate key="account.show" extensionName="hubic"/>
+										</f:link.action>
+										<f:link.action action="accessToken" arguments="{account: account}"
+																	 class="btn btn-primary {f:if(condition: '{account.refreshToken}', then: 'hide')}">
+											<i class="fa fa-link"></i>
+											<f:translate key="account.access_token" extensionName="hubic"/>
+										</f:link.action>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</f:for>
+			</f:then>
+		</f:if>
+	</div>
 
-	</f:section>
-</div>
+
+</f:section>
+</html>

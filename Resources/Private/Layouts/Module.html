@@ -16,24 +16,35 @@
 		<div class="module-loading-indicator"></div>
 		<div class="module-docheader">
 
-			<div class="module-docheader-bar">
-
-				<div class="module-docheader-bar-column-left">
+			<div class="typo3-docheader-functions">
+				<div class="module-docheader-bar module-docheader-bar-navigation">
+					<div class="module-docheader-bar-column-left">
 						<f:image src="EXT:hubic/Resources/Public/Images/hubic-logo.png" width="100"/>
-				</div>
-				<div class="module-docheader-bar-column-right">
-
+					</div>
+					<div class="module-docheader-bar-column-right"></div>
 				</div>
 			</div>
-
 		</div>
 		<div id="typo3-docbody">
 			<div id="typo3-inner-docbody">
 
 				<f:if condition="{account}">
-				<div class="page-header">
-					<h1><f:translate key="account"/> <small>{account.name}</small></h1>
-				</div>
+					<f:then>
+						<div class="page-header">
+							<h1>
+								<f:translate key="account"/>
+								<small>{account.name}</small>
+							</h1>
+						</div>
+					</f:then>
+					<f:else>
+						<div class="page-header">
+							<h1>
+								<f:translate key="account"/>
+								<span class="badge">{accounts -> f:count()}</span>
+							</h1>
+						</div>
+					</f:else>
 				</f:if>
 
 				<f:flashMessages/>

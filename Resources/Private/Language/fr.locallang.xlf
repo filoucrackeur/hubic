@@ -25,7 +25,7 @@
 				<target>Compte</target>
 			</trans-unit>
 			<trans-unit id="account.delete">
-				<target>Supprimer le compte</target>
+				<target>Supprimer</target>
 			</trans-unit>
 			<trans-unit id="account.show">
 				<target>Détails</target>
@@ -42,8 +42,11 @@
 			<trans-unit id="account.link_comment">
 				<target>Commentaire</target>
 			</trans-unit>
-			<trans-unit id="account.firstname_lastname">
-				<target>Prénom &amp; nom</target>
+			<trans-unit id="account.firstname">
+				<target>Prénom</target>
+			</trans-unit>
+			<trans-unit id="account.lastname">
+				<target>Nom de famille</target>
 			</trans-unit>
 			<trans-unit id="account.email">
 				<target>Email</target>

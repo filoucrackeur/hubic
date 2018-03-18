@@ -20,6 +20,7 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 class Account extends AbstractEntity
 {
+
     /**
      * @var string
      */
@@ -49,6 +50,11 @@ class Account extends AbstractEntity
      * @var string
      */
     protected $scope;
+
+    /**
+     * @var \DateTime
+     */
+    protected $expirationDate;
 
     /**
      * @return string
@@ -144,5 +150,29 @@ class Account extends AbstractEntity
     public function setScope(string $scope)
     {
         $this->scope = $scope;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getExpirationDate(): ?\DateTime
+    {
+        return $this->expirationDate;
+    }
+
+    /**
+     * @param \DateTime $expirationDate
+     */
+    public function setExpirationDate(\DateTime $expirationDate)
+    {
+        $this->expirationDate = $expirationDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        return $this->getExpirationDate() < new \DateTime();
     }
 }

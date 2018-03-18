@@ -17,6 +17,7 @@
 namespace Filoucrackeur\Hubic\Service;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
+use Filoucrackeur\Hubic\Domain\Repository\AccountRepository;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\FormProtection\FormProtectionFactory;
@@ -45,6 +46,11 @@ class HubicService implements SingletonInterface
      * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
      */
     protected $persistenceManager;
+
+    /**
+     * @var \Filoucrackeur\Hubic\Domain\Repository\AccountRepository
+     */
+    protected $accountRepository;
 
     /**
      * @var \Filoucrackeur\Hubic\Domain\Model\Account
@@ -79,6 +85,8 @@ class HubicService implements SingletonInterface
             $content = json_decode($response->getBody()->getContents());
             $account->setAccessToken($content->access_token);
             $account->setRefreshToken($content->refresh_token);
+            $expireIn = new \DateTime('+ ' . $content->expires_in . ' seconds');
+            $account->setExpirationDate($expireIn);
             $this->persistenceManager->update($account);
             $this->persistenceManager->persistAll();
         }
@@ -157,7 +165,6 @@ class HubicService implements SingletonInterface
      */
     public function fetch(string $path, $method = 'GET')
     {
-
         $additionalOptions = [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
@@ -174,9 +181,8 @@ class HubicService implements SingletonInterface
                 return json_decode($response->getBody()->getContents());
             }
         } catch (\Exception $e) {
-            if ($this->refreshToken($this->account)) {
-                return $this->fetch($path, $method);
-            }
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($method);
+            \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($response);
         }
         return null;
     }
@@ -211,6 +217,34 @@ class HubicService implements SingletonInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function delete(Account $account): void
+    {
+        $this->persistenceManager->remove($account);
+        $this->persistenceManager->persistAll();
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function unlink(Account $account): void
+    {
+        $account->setAccessToken('');
+        $account->setRefreshToken('');
+        $this->persistenceManager->update($account);
+        $this->persistenceManager->persistAll();
+    }
+
+    /**
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function getAccounts()
+    {
+        return $this->accountRepository->findAll();
     }
 
     /**
@@ -250,6 +284,19 @@ class HubicService implements SingletonInterface
     }
 
     /**
+     * Delete hubiC link.
+     *
+     * @see https://api.hubic.com/console/
+     *
+     * @param string $uri
+     * @return ResponseInterface
+     */
+    public function deleteLink(string $uri)
+    {
+        return $this->fetch('/account/link', 'DELETE');
+    }
+
+    /**
      * @param RequestFactory $requestFactory
      */
     public function injectRequestFactory(RequestFactory $requestFactory): void
@@ -263,5 +310,13 @@ class HubicService implements SingletonInterface
     public function injectPersistenceManager(PersistenceManager $persistenceManager): void
     {
         $this->persistenceManager = $persistenceManager;
+    }
+
+    /**
+     * @param AccountRepository $accountRepository
+     */
+    public function injectAccountRepository(AccountRepository $accountRepository)
+    {
+        $this->accountRepository = $accountRepository;
     }
 }

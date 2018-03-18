@@ -17,11 +17,9 @@
 namespace Filoucrackeur\Hubic\Controller\Backend;
 
 use Filoucrackeur\Hubic\Domain\Model\Account;
-use Filoucrackeur\Hubic\Domain\Repository\AccountRepository;
 use Filoucrackeur\Hubic\Service\HubicService;
 use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -30,24 +28,13 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 class AccountController extends ActionController
 {
     /**
-     * @var \Filoucrackeur\Hubic\Domain\Repository\AccountRepository
-     */
-    protected $accountRepository;
-
-    /**
-     * @var \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager
-     */
-    protected $persistenceManager;
-
-    /**
      * @var \Filoucrackeur\Hubic\Service\HubicService
      */
     protected $hubicService;
 
     public function indexAction(): void
     {
-        $accounts = $this->accountRepository->findAll();
-        $this->view->assign('accounts', $accounts);
+        $this->view->assign('accounts', $this->hubicService->getAccounts());
     }
 
     /**
@@ -92,6 +79,7 @@ class AccountController extends ActionController
 
     /**
      * @param Account $account
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function callbackAction(Account $account): void
     {
@@ -112,42 +100,36 @@ class AccountController extends ActionController
      */
     public function deleteAction(Account $account): void
     {
-        $this->persistenceManager->remove($account);
+        $this->hubicService->delete($account);
         $this->addFlashMessage(LocalizationUtility::translate('flashmessage.account_deleted', 'hubic'),
-            LocalizationUtility::translate('account'),
+            LocalizationUtility::translate('account', 'hubic'),
             AbstractMessage::OK);
         $this->forward('index');
     }
 
     /**
      * @param Account $account
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      */
     public function unlinkAction(Account $account): void
     {
-        $account->setAccessToken('');
-        $account->setRefreshToken('');
-        $this->persistenceManager->update($account);
-        $this->persistenceManager->persistAll();
+        $this->hubicService->unlink($account);
+
         $this->addFlashMessage(LocalizationUtility::translate('flashmessage.account_unlinked', 'hubic'),
             LocalizationUtility::translate('account', 'hubic'),
             AbstractMessage::OK);
+        $this->forward('index');
+    }
+
+    /**
+     * @param Account $account
+     * @param string $uri
+     */
+    public function unlinkUriAction(Account $account, string $uri)
+    {
+        $this->hubicService->setAccount($account);
+        $this->hubicService->deleteLink($uri);
         $this->forward('show', null, null, ['account' => $account]);
-    }
-
-    /**
-     * @param AccountRepository $accountRepository
-     */
-    public function injectAccountRepository(AccountRepository $accountRepository): void
-    {
-        $this->accountRepository = $accountRepository;
-    }
-
-    /**
-     * @param PersistenceManager $persistenceManager
-     */
-    public function injectPersistenceManager(PersistenceManager $persistenceManager): void
-    {
-        $this->persistenceManager = $persistenceManager;
     }
 
     /**

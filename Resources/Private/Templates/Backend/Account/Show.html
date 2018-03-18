@@ -4,11 +4,17 @@
 
 
 	<f:section name="Assets">
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 		<script>
-			var legendes = ['<f:translate key="account.quota.used"/>', '<f:translate key="account.quota.available"/>'];
+			var title = '<f:translate key="account.quota.used"/>';
 			var quotaTotal = {clientAccountQuota.quota};
-			var quotaUsed = {clientAccountQuota.used};
+			var quotaUsed = {clientAccountQuota.used} / quotaTotal * 100;
+			var quotaAvailable = 100 - quotaUsed;
+			var quotas = [
+				{y: quotaUsed, label: '<f:translate key="account.quota.used"/>', color: '#2A6794'},
+				{y: quotaAvailable, label: '<f:translate key="account.quota.available"/>', color: '#F7F7F7'}
+			];
 		</script>
 	</f:section>
 
@@ -21,74 +27,93 @@
 			<f:if condition="{account.accessToken}">
 				<f:then>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-						<table class="table table-striped table-hover">
+						<table class="table table-striped table-hover" id="js--data-infos">
 							<tbody>
-							<tr>
-								<th>
-									<f:translate key="account.client_id"/>
-								</th>
-								<td style="word-break: break-all;">{account.clientId}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.client_secret"/>
-								</th>
-								<td style="word-break: break-all;">{account.clientSecret}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.access_token"/>
-								</th>
-								<td style="word-break: break-all;">{account.accessToken}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.refresh_token"/>
-								</th>
-								<td style="word-break: break-all;">{account.refreshToken}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.firstname_lastname"/>
-								</th>
-								<td>{clientAccount.firstname} {clientAccount.lastname}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.email"/>
-								</th>
-								<td>{clientAccount.email}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.offer_name"/>
-								</th>
-								<td>{clientAccount.offer}</td>
-							</tr>
-							<tr>
-								<th>
-									<f:translate key="account.quota.total"/>
-								</th>
-								<td>{clientAccountQuota.quota -> f:format.bytes()}</td>
-							</tr>
+								<tr>
+									<th>
+										<i class="fa fa-cogs"></i>
+										<f:translate key="account.client_id"/>
+									</th>
+									<td style="word-break: break-all;"><code>{account.clientId}</code></td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-cogs"></i>
+										<f:translate key="account.client_secret"/>
+									</th>
+									<td style="word-break: break-all;"><code>{account.clientSecret}</code></td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-cogs"></i>
+										<f:translate key="account.access_token"/>
+									</th>
+									<td style="word-break: break-all;"><code>{account.accessToken}</code></td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-cogs"></i>
+										<f:translate key="account.refresh_token"/>
+									</th>
+									<td style="word-break: break-all;"><code>{account.refreshToken}</code></td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-user-circle"></i>
+										<f:translate key="account.firstname"/>
+									</th>
+									<td>{clientAccount.firstname}</td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-user-circle"></i>
+										<f:translate key="account.lastname"/>
+									</th>
+									<td>{clientAccount.lastname}</td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-at"></i>
+										<f:translate key="account.email"/>
+									</th>
+									<td>{clientAccount.email}</td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-cube"></i>
+										<f:translate key="account.offer_name"/>
+									</th>
+									<td>{clientAccount.offer}</td>
+								</tr>
+								<tr>
+									<th>
+										<i class="fa fa-database"></i>
+										<f:translate key="account.quota.total"/>
+									</th>
+									<td>
+										{clientAccountQuota.quota -> f:format.bytes()}</td>
+								</tr>
 							</tbody>
 						</table>
 
 						<p>
-							<f:link.action action="refreshToken" arguments="{account: account}" class="btn btn-primary btn-lg">
+							<f:link.action action="refreshToken" arguments="{account: account}" class="btn btn-default">
 								<i class="fa fa-refresh"></i>
 								<f:translate key="account.btn.refresh_token"/>
 							</f:link.action>
-							<f:link.action action="unlink" arguments="{account: account}" class="btn btn-danger btn-lg">
+							<f:link.action action="unlink" arguments="{account: account}" class="btn btn-warning">
 								<i class="fa fa-unlink"></i>
 								<f:translate key="account.unlink"/>
+							</f:link.action>
+							<f:link.action action="delete" arguments="{account: account}" class="btn btn-danger">
+								<i class="fa fa-trash"></i>
+								<f:translate key="account.delete"/>
 							</f:link.action>
 						</p>
 
 					</div>
 					<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-						<canvas id="camembert" class="col-lg-12"></canvas>
+						<div id="quota" style="height: 370px; width: 100%;"></div>
 					</div>
 				</f:then>
 				<f:else>
@@ -105,6 +130,7 @@
 		</div>
 
 		<div class="row">
+			<div class="col-xs-12">
 			<f:if condition="{account.accessToken}">
 				<f:if condition="{links}">
 					<table class="table table-striped table-hover">
@@ -118,10 +144,13 @@
 								<f:translate key="account.link_comment"/>
 							</th>
 							<th>
-								<f:translate key="account.link_comment"/>
+								<f:translate key="account.date_creation"/>
 							</th>
 							<th>
-								<f:translate key="account.link_comment"/>
+								<i class="fa fa-clock-o"></i>
+								<f:translate key="account.date_expiration"/>
+							</th>
+							<th>
 							</th>
 						</tr>
 						</thead>
@@ -146,13 +175,19 @@
 								<td>{link.comment}</td>
 								<td>{link.creationDate -> f:format.date(format: 'd/m/Y')}</td>
 								<td>{link.expirationDate -> f:format.date(format: 'd/m/Y')}</td>
+								<td>
+									<f:link.action action="unlinkUri" class="btn btn-default btn-xs" arguments="{account: account, uri: link.uri}" >
+										<i class="fa fa-unlink"></i>
+										<f:translate key="account.unlink"/>
+									</f:link.action>
+								</td>
 							</tr>
 						</f:for>
 						</tbody>
 					</table>
 				</f:if>
 			</f:if>
-
-
+			</div>
+		</div>
 	</f:section>
 </div>
