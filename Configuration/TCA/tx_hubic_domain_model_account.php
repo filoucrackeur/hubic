@@ -19,8 +19,8 @@ return [
         'showRecordFieldList' => 'name,client_id,client_secret,access_token,hidden'
     ],
     'types' => [
-        '0' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date,hidden'],
-        '1' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date,hidden']
+        '0' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date'],
+        '1' => ['showitem' => 'hidden,name,client_id,client_secret,scope,access_token,refresh_token,expiration_date']
     ],
     'palettes' => [],
     'columns' => [
