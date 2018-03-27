@@ -113,9 +113,9 @@ class Account extends AbstractEntity
     }
 
     /**
-     * @param string $accessToken
+     * @param string|null $accessToken
      */
-    public function setAccessToken(string $accessToken)
+    public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
     }
@@ -129,9 +129,9 @@ class Account extends AbstractEntity
     }
 
     /**
-     * @param string $refreshToken
+     * @param string|null $refreshToken
      */
-    public function setRefreshToken(string $refreshToken)
+    public function setRefreshToken($refreshToken)
     {
         $this->refreshToken = $refreshToken;
     }
