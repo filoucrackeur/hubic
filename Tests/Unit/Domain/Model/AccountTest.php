@@ -192,4 +192,22 @@ class AccountTest extends AbstractUnitTest
             $this->account
         );
     }
+
+    /**
+     * @test
+     */
+    public function getExpirationDateGetDateTime()
+    {
+        $this->assertInstanceOf(\DateTime::class,
+            $this->account->getExpirationDate()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function getIsExpiredReturnFalse()
+    {
+        $this->assertNotTrue($this->account->isExpired());
+    }
 }

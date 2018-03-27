@@ -1,9 +1,10 @@
 <?php
+
 namespace Filoucrackeur\Hubic\Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
-abstract class AbstractUnitTest extends TestCase
+abstract class AbstractUnitTest extends UnitTestCase
 {
     protected function setUp()
     {

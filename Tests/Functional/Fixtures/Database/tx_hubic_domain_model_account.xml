@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+	<tx_hubic_domain_model_account>
+		<uid>1</uid>
+		<pid>0</pid>
+		<name>Compte de test</name>
+		<client_id>numero client de test</client_id>
+		<client_secret>Secret client de test</client_secret>
+		<access_token></access_token>
+		<crdate>0</crdate>
+		<deleted>0</deleted>
+		<hidden>0</hidden>
+		<tstamp>0</tstamp>
+		<cruser_id>0</cruser_id>
+		<starttime>0</starttime>
+		<endtime>0</endtime>
+		<sorting>0</sorting>
+		<sys_language_uid>0</sys_language_uid>
+		<l18n_parent>0</l18n_parent>
+		<l18n_diffsource>0</l18n_diffsource>
+		<access_group>0</access_group>
+		<scope>0</scope>
+		<refresh_token>0</refresh_token>
+		<expiration_date>0</expiration_date>
+	</tx_hubic_domain_model_account>
+</dataset>
