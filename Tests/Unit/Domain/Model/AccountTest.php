@@ -35,7 +35,7 @@ class AccountTest extends AbstractUnitTest
         $this->account->setAccessToken('myAccessToken');
         $this->account->setRefreshToken('myRefreshToken');
         $this->account->setScope('myScope');
-        $this->account->setExpirationDate(new \DateTime('now'));
+        $this->account->setExpirationDate(new \DateTime('-1 day'));
     }
 
     public function tearDown()
@@ -208,6 +208,6 @@ class AccountTest extends AbstractUnitTest
      */
     public function getIsExpiredReturnFalse()
     {
-        $this->assertNotTrue($this->account->isExpired());
+        $this->assertTrue($this->account->isExpired());
     }
 }

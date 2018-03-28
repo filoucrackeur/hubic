@@ -173,6 +173,6 @@ class Account extends AbstractEntity
      */
     public function isExpired(): bool
     {
-        return $this->getExpirationDate() < new \DateTime();
+        return $this->getExpirationDate() < new \DateTime('now');
     }
 }
