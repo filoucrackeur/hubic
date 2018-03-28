@@ -21,11 +21,15 @@ class HubicController extends ActionController
 
     public function listAction()
     {
-        /** @var Account $account */
-        $account = $this->accountRepository->findByIdentifier($this->settings['account']);
-        if ($account) {
-            $this->hubicService->setAccount($account);
-            $this->view->assign('links', $this->hubicService->getAllLinks());
+        try {
+
+            /** @var Account $account */
+            $account = $this->accountRepository->findByIdentifier($this->settings['account']);
+            if ($account) {
+                $this->hubicService->setAccount($account);
+                $this->view->assign('links', $this->hubicService->getAllLinks());
+            }
+        } catch(\Exception $e) {
         }
     }
 
