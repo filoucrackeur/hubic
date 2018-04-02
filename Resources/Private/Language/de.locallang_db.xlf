@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2014-06-02T11:48:25Z" product-name="hubic">
+		<header/>
+		<body>
+			<trans-unit id="hubic">
+				<target>hubiC</target>
+			</trans-unit>
+			<trans-unit id="tx_hubic_domain_model_account">
+				<target>HubiC-Konto</target>
+			</trans-unit>
+			<trans-unit id="name">
+				<target>Kontoname</target>
+			</trans-unit>
+			<trans-unit id="client_id">
+				<target>Client-ID</target>
+			</trans-unit>
+			<trans-unit id="client_secret">
+				<target>Client-Geheimnis</target>
+			</trans-unit>
+			<trans-unit id="scope">
+				<target>Anwendungsbereich</target>
+			</trans-unit>
+			<trans-unit id="access_token">
+				<target>Zugriffstoken</target>
+			</trans-unit>
+			<trans-unit id="refresh_token">
+				<target>Aktualisierungstoken</target>
+			</trans-unit>
+			<trans-unit id="date_expiration">
+				<target>Ablaufdatum</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
