@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="es" datatype="plaintext" original="messages" date="2014-06-02T11:48:25Z" product-name="hubic">
+		<header/>
+		<body>
+			<trans-unit id="mlang_tabs_tab">
+				<target>hubiC</target>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tablabel">
+				<target>Gestión de cuentas hubiC</target>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tabdescr">
+				<target>Gestión de cuentas hubiC</target>
+			</trans-unit>
+			<trans-unit id="docheader.account.index">
+				<target>Gestión de cuentas hubiC</target>
+			</trans-unit>
+			<trans-unit id="docheader.account.config">
+				<target>Configuración</target>
+			</trans-unit>
+			<trans-unit id="docheader.account.info">
+				<target>Información</target>
+			</trans-unit>
+			<trans-unit id="account">
+				<target>Cuenta</target>
+			</trans-unit>
+			<trans-unit id="account.delete">
+				<target>Eliminar</target>
+			</trans-unit>
+			<trans-unit id="account.show">
+				<target>Detalles</target>
+			</trans-unit>
+			<trans-unit id="account.unlink">
+				<target>De-enlace</target>
+			</trans-unit>
+			<trans-unit id="account.add">
+				<target>Agrega una cuenta</target>
+			</trans-unit>
+			<trans-unit id="account.shared_links">
+				<target>Enlaces compartidos</target>
+			</trans-unit>
+			<trans-unit id="account.link_comment">
+				<target>Comentario</target>
+			</trans-unit>
+			<trans-unit id="account.firstname">
+				<target>Nombre</target>
+			</trans-unit>
+			<trans-unit id="account.lastname">
+				<target>Apellido</target>
+			</trans-unit>
+			<trans-unit id="account.email">
+				<target>E-mail</target>
+			</trans-unit>
+			<trans-unit id="account.quota.total">
+				<target>Cuota total</target>
+			</trans-unit>
+			<trans-unit id="account.quota.used">
+				<target>Cuota utilizada</target>
+			</trans-unit>
+			<trans-unit id="account.quota.available">
+				<target>Cuota disponible</target>
+			</trans-unit>
+			<trans-unit id="account.offer_name">
+				<target>Oferta</target>
+			</trans-unit>
+			<trans-unit id="account.date_creation">
+				<target>Fecha de creación</target>
+			</trans-unit>
+			<trans-unit id="account.date_expiration">
+				<target>Fecha de caducidad</target>
+			</trans-unit>
+			<trans-unit id="account.client_id">
+				<target>Identificación del cliente</target>
+			</trans-unit>
+			<trans-unit id="account.client_secret">
+				<target>Cliente secreto</target>
+			</trans-unit>
+			<trans-unit id="account.access_token">
+				<target>Token de acceso</target>
+			</trans-unit>
+			<trans-unit id="account.refresh_token">
+				<target>Refresco token</target>
+			</trans-unit>
+			<trans-unit id="account.btn.refresh_token">
+				<target>Actualizar el token</target>
+			</trans-unit>
+			<trans-unit id="account.information">
+				<target>Información de cuenta</target>
+			</trans-unit>
+			<trans-unit id="account.btn.get_access_token">
+				<target>Obtener un token de acceso hubiC</target>
+			</trans-unit>
+			<trans-unit id="no_account">
+				<target>Sin cuenta</target>
+			</trans-unit>
+			<trans-unit id="account.name">
+				<target>Nombre de la cuenta</target>
+			</trans-unit>
+			<trans-unit id="action">
+				<target>Acción</target>
+			</trans-unit>
+
+			<trans-unit id="flashmessage.account_deleted">
+				<target>Cuenta eliminada con éxito</target>
+			</trans-unit>
+			<trans-unit id="flashmessage.account_unlinked">
+				<target>Cuenta desvinculada exitosamente</target>
+			</trans-unit>
+			<trans-unit id="flashmessage.token_added">
+				<target>Token agregado con éxito</target>
+			</trans-unit>
+			<trans-unit id="flashmessage.authentication">
+				<target>Autenticación</target>
+			</trans-unit>
+			<trans-unit id="flashmessage.missing_client_data">
+				<target>Error al obtener el token, verifique la identidad del cliente y el secreto del cliente</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
