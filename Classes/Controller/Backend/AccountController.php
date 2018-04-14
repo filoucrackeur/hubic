@@ -42,17 +42,21 @@ class AccountController extends ActionController
      */
     public function showAction(Account $account)
     {
-        if ($account->getAccessToken()) {
-            $this->hubicService->setAccount($account);
-            $this->view->assignMultiple([
-                'clientAccount' => $this->hubicService->getAccount(),
-                'clientAccountQuota' => $this->hubicService->getAccountQuota(),
-                'agreement' => $this->hubicService->getAgreement(),
-                'links' => $this->hubicService->getAllLinks()
-            ]);
-        }
+        try {
+            if ($account->getAccessToken()) {
+                $this->hubicService->setAccount($account);
+                $this->view->assignMultiple([
+                    'clientAccount' => $this->hubicService->getAccount(),
+                    'clientAccountQuota' => $this->hubicService->getAccountQuota(),
+                    'agreement' => $this->hubicService->getAgreement(),
+                    'links' => $this->hubicService->getAllLinks()
+                ]);
+            }
 
-        $this->view->assign('account', $account);
+            $this->view->assign('account', $account);
+        } catch (\Exception $e) {
+            $this->forward('index');
+        }
     }
 
     /**
@@ -71,7 +75,12 @@ class AccountController extends ActionController
      */
     public function accessTokenAction(Account $account)
     {
-        $this->hubicService->redirectUrlRequestToken($account);
+        try {
+            $this->hubicService->redirectUrlRequestToken($account);
+
+        } catch (\Exception $e) {
+            $this->forward('index');
+        }
     }
 
     /**
@@ -82,16 +91,23 @@ class AccountController extends ActionController
      */
     public function callbackAction(Account $account)
     {
-        if ($this->hubicService->accessToken($account)) {
-            $this->addFlashMessage(LocalizationUtility::translate('flashmessage.token_added', 'hubic'),
-                LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
-                AbstractMessage::OK);
-        } else {
-            $this->addFlashMessage(LocalizationUtility::translate('flashmessage.missing_client_data', 'hubic'),
-                LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
-                AbstractMessage::ERROR);
+        try {
+
+            if ($this->hubicService->accessToken($account)) {
+                $this->addFlashMessage(LocalizationUtility::translate('flashmessage.token_added', 'hubic'),
+                    LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
+                    AbstractMessage::OK);
+            } else {
+                $this->addFlashMessage(LocalizationUtility::translate('flashmessage.missing_client_data', 'hubic'),
+                    LocalizationUtility::translate('flashmessage.authentication', 'hubic'),
+                    AbstractMessage::ERROR);
+            }
+            $this->forward('show', null, null, ['account' => $account]);
+
+        } catch (\Exception $e) {
+            $this->addFlashMessage($e->getMessage(),'', AbstractMessage::ERROR);
+            $this->forward('index');
         }
-        $this->forward('show', null, null, ['account' => $account]);
     }
 
     /**
@@ -130,8 +146,7 @@ class AccountController extends ActionController
      */
     public function unlinkUriAction(Account $account, string $uri)
     {
-        $this->hubicService->setAccount($account);
-        $this->hubicService->deleteLink($uri);
+        $this->hubicService->deleteLink($account, $uri);
         $this->forward('show', null, null, ['account' => $account]);
     }
 

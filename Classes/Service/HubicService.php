@@ -26,7 +26,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 
 class HubicService implements SingletonInterface
 {
@@ -64,7 +63,7 @@ class HubicService implements SingletonInterface
      * @return bool
      * @throws \RuntimeException
      */
-    public function accessToken(Account $account)
+    public function accessToken(Account $account): bool
     {
         $credentials = base64_encode($account->getClientId() . ':' . $account->getClientSecret());
         $additionalOptions = [
@@ -86,7 +85,7 @@ class HubicService implements SingletonInterface
             $content = json_decode($response->getBody()->getContents());
             $account->setAccessToken($content->access_token);
             $account->setRefreshToken($content->refresh_token);
-            $expireIn = new \DateTime('+ ' . $content->expires_in . ' seconds');
+            $expireIn = new \DateTime('+ ' . (int)$content->expires_in . ' seconds');
             $account->setExpirationDate($expireIn);
             $this->persistenceManager->update($account);
             $this->persistenceManager->persistAll();
@@ -118,7 +117,6 @@ class HubicService implements SingletonInterface
 
         $uri = self::AUTHORIZATION_ENDPOINT . '?' . urldecode(http_build_query($arguments));
         header('Location: ' . $uri);
-        die();
     }
 
     /**
@@ -126,7 +124,7 @@ class HubicService implements SingletonInterface
      *
      * @return string
      */
-    private function getRedirectUri(Account $account): string
+    public function getRedirectUri(Account $account): string
     {
         $formProtection = FormProtectionFactory::get();
         $formToken = $formProtection->generateToken('AuthorizationRequest');
@@ -145,6 +143,9 @@ class HubicService implements SingletonInterface
                 ])->buildBackendUri());
     }
 
+    /**
+     * @return ResponseInterface|string
+     */
     public function getAccount()
     {
         return $this->fetch('/account');
@@ -246,7 +247,7 @@ class HubicService implements SingletonInterface
     }
 
     /**
-     * @return QueryResult|null
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
     public function getAccounts()
     {
@@ -294,11 +295,14 @@ class HubicService implements SingletonInterface
      *
      * @see https://api.hubic.com/console/
      *
+     * @param Account $account
      * @param string $uri
      * @return ResponseInterface|null
      */
-    public function deleteLink(string $uri)
+    public function deleteLink(Account $account, string $uri)
     {
+        $this->setAccount($account);
+
         $arguments = [
             'uri' => $uri
         ];
