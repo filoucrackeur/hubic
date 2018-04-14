@@ -23,7 +23,7 @@
 	],
 	"require": {
 		"php": ">=7.0,<8.0-DEV",
-		"typo3/cms": "^8.1"
+		"typo3/cms": ">=8.1"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
