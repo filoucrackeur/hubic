@@ -99,7 +99,8 @@ class HubicService implements SingletonInterface
      */
     public function getHost(): string
     {
-        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        $protocol = isset($_SERVER["HTTPS"]) ? 'https' : 'http';
+        return $protocol . '://' . $_SERVER['HTTP_HOST'];
     }
 
     /**
